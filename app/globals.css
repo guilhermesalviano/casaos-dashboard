@@ -7,14 +7,16 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-
   --surface: #ffffff;
   --surface2: #f1f3f5;
   --border: #e9ecef;
+  --border-hover: #3a3a3a;
   --muted: #555;
   --accent: #5a6e0f;
   --font-mono: 'Space Mono', monospace;
   --font-body: 'DM Sans', sans-serif;
+  --gradient-start: #f8faf0;
+  --gradient-end: #eef5db;
 }
 
 @theme inline {
@@ -24,10 +26,18 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --surface: #1a1a1a;
+    --surface2: #2a2a2a;
+    --muted: #aaaaaa;
+    --border: #3a3a3a;
+    --border-hover: #e9ecef;
+    --gradient-start: #2a2a2a;
+    --gradient-end: #1a1a1a;
   }
 }
 
@@ -81,7 +91,6 @@ body {
   50% { opacity: 0.3; }
 }
 
-/* CARD */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -94,7 +103,7 @@ body {
 }
 
 .card:hover {
-  border-color: #3a3a3a;
+  border: 1px solid var(--border-hover);
 }
 
 .section-title {
@@ -116,7 +125,8 @@ body {
 .col-12 { grid-column: span 12; }
 
 .weather-card {
-  background: linear-gradient(135deg, #f8faf0 0%, #eef5db 100%);
+  background-color: var(--gradient-start);
+  background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
 }
 .weather-main {
   display: flex;
