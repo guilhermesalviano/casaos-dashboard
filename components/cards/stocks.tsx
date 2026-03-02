@@ -14,9 +14,9 @@ export default function StocksCard() {
       .then((res) => res.json())
       .then((data) => {
         setStocks(data.data);
-        reportStatus("stocks", true);
+        reportStatus("stocks", "success");
       }).catch(() => {
-        reportStatus("stocks", false);
+        reportStatus("stocks", "error");
       });
   }, []);
 

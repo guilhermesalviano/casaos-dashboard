@@ -14,9 +14,9 @@ export default function WeatherCard() {
       .then((res) => res.json())
       .then((data) => {
         setWeather(data.data);
-        reportStatus("weather", true);
+        reportStatus("weather", "success");
       }).catch(() => {
-        reportStatus("weather", false);
+        reportStatus("weather", "error");
       });
   }, []);
 

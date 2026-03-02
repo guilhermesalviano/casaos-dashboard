@@ -16,9 +16,9 @@ export default function CalendarCard() {
       .then((res) => res.json())
       .then((data) => {
         setCalendar(data.data);
-        reportStatus("calendar", true);
+        reportStatus("calendar", "success");
       }).catch(() => {
-        reportStatus("calendar", false);
+        reportStatus("calendar", "error");
       });
   }, []);
 

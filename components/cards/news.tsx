@@ -16,9 +16,9 @@ export default function NewsCard() {
       .then((res) => res.json())
       .then((data) => {
         setNews(data.data);
-        reportStatus("news", true);
+        reportStatus("news", "success");
       }).catch(() => {
-        reportStatus("news", false);
+        reportStatus("news", "error");
       });
   }, []);
 
