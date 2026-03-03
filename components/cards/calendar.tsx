@@ -34,7 +34,9 @@ export default function CalendarCard() {
         )}
         {calendar?.map((ev: any) => (
           <div key={ev.id} className="calendar-event" style={{ borderLeft: `3px solid ${ev.color}` }}>
-            <span className="event-time">{ev.time}</span>
+            <span className="event-title">Personal:</span>
+            <span className="event-time">{ev.start} -</span>
+            <span className="event-time">{ev.end}</span>
             <span className="event-title">{ev.title}</span>
           </div>
         ))}

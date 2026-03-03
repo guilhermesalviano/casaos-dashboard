@@ -9,7 +9,8 @@ export async function GET(req: NextRequest) {
     const calendar = events.map((event) => {
       return {
         id: event.id,
-        time: format(event.start.dateTime, "HH:mm"),
+        start: format(event.start.dateTime, "HH:mm"),
+        end: format(event.end.dateTime, "HH:mm"),
         title: event.summary,
         color: "#6EE7B7" // personal calendar color
       }
