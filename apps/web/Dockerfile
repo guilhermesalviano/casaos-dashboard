@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ./package*.json ./
 
-RUN npm install
+RUN ls -la && npm install
 
 COPY . .
 
