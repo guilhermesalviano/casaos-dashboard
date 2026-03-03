@@ -1,36 +1,41 @@
 package services
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"log"
+	"strings"
+
+	"github.com/joho/godotenv"
 )
 
-type callMeBotWhatsAppNumbers struct {
-	Numbers []string `json:"numbers"`
-}
-
 func CallMeBotAPI(text string) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error in loading .env file")
+	}
+
 	callMeBotAPIKey := os.Getenv("CALLMEBOT_API_KEY")
-	callMeBotWhatsAppNumbersJSON := os.Getenv("CALLMEBOT_WHATSAPP_NUMBERS")
+	callMeBotWhatsAppNumbers := os.Getenv("CALLMEBOT_WHATSAPP_NUMBER")
 
-	var whatsappNumbers callMeBotWhatsAppNumbers
-	json.Unmarshal([]byte(callMeBotWhatsAppNumbersJSON), &whatsappNumbers)
 
-	if callMeBotAPIKey == "" || callMeBotWhatsAppNumbersJSON == "" {
-		fmt.Println("CALLMEBOT_API_KEY ou CALLMEBOT_WHATSAPP_NUMBERS não configurados. Ignorando envio de mensagem.")
+	fmt.Printf("CALLMEBOT_WHATSAPP_NUMBER: %s\n", callMeBotWhatsAppNumbers)
+	if callMeBotAPIKey == "" || callMeBotWhatsAppNumbers == "" {
+		fmt.Println("CALLMEBOT_API_KEY or CALLMEBOT_WHATSAPP_NUMBER is not configured. Ignoring message sending.")
 		return
 	}
+
+	textReplaced := strings.ReplaceAll(text, " ", "+")
 	
 	url := fmt.Sprintf("https://api.callmebot.com/whatsapp.php?phone=%s&text=%s&apikey=%s",
-		whatsappNumbers.Numbers[0], text, callMeBotAPIKey)
+		callMeBotWhatsAppNumbers, textReplaced, callMeBotAPIKey)
 
-	fmt.Printf("Enviando mensagem para CallMeBot API: %s\n", url)
+	fmt.Printf("Sending message to CallMeBot API: %s\n", url)
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Printf("Erro ao enviar mensagem para CallMeBot API: %v\n", err)
+		fmt.Printf("Error sending message to CallMeBot API: %v\n", err)
 		return
 	}
-	fmt.Printf("Resposta da CallMeBot API: %v\n", resp)
+	fmt.Printf("Response from CallMeBot API: %v\n", resp.Status)
 }
