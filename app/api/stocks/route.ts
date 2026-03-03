@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
       return {
         ticker: stock.symbol,
         price: stock.regularMarketPrice,
+        priceOpened: stock.regularMarketDayHigh,
         change: stock.regularMarketChange,
         pct: stock.regularMarketChangePercent,
       }

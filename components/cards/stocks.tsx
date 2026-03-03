@@ -27,9 +27,9 @@ export default function StocksCard() {
         <div className="stock-row">
           <span className="w-10 text-sm">Ticker</span>
           <span className="w-26 text-center text-sm">
-            Max price
+            Price Opened
           </span>
-          <span className="w-24 text-center text-sm">
+          <span className="w-18 text-center text-sm">
             Price
           </span>
           <span className="w-18 text-center text-sm">
@@ -40,7 +40,7 @@ export default function StocksCard() {
           <div key={s.ticker} className="stock-row">
             <span className="stock-ticker">{s.ticker}</span>
             <span className="stock-price">
-              {`R$ ${s.price.toFixed(2)}`}
+              {`R$ ${s.priceOpened?.toFixed(2)}`}
             </span>
             <span className="stock-price">
               {`R$ ${s.price.toFixed(2)}`}
