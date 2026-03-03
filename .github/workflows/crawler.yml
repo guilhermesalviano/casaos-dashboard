@@ -1,0 +1,21 @@
+name: Run Go Crawler
+on:
+  schedule:
+    - cron: '0 0 * * *' # Todo dia à meia-noite
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Run Crawler
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cd ./apps/crawlers
+          go run main.go
