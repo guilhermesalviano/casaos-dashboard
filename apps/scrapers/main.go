@@ -11,6 +11,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+	"github.com/joho/godotenv"
+	"log"
 )
 
 // ─── Config ──────────────────────────────────────────────────────────────────
@@ -260,6 +262,9 @@ func timeOnly(dt string) string {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 func main() {
+	err := godotenv.Load()
+	if err != nil { log.Println("Warning: .env file not found, relying on environment variables") }
+
 	apiKey     := flag.String("key", os.Getenv("SERPAPI_KEY"), "SerpApi API key (or set SERPAPI_KEY env var)")
 	from       := flag.String("from", "GRU", "Departure IATA code (e.g. GRU, JFK, LHR)")
 	to         := flag.String("to", "JFK", "Arrival IATA code (e.g. JFK, GRU, CDG)")
