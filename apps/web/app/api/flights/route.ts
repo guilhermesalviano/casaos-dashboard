@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getDatabaseConnection } from "@/lib/db";
+import { FlightCrawled } from "@/entities/FlightCrawled";
 
 export async function GET(req: NextRequest) {
   try {
-    const mockFlights = [
-      { route: "GRU → LIS", date: "10 Jan", price: "R$ 3.240", airline: "TAP", trend: "▼" },
-      { route: "GRU → MIA", date: "15 Jan", price: "R$ 4.100", airline: "LATAM", trend: "▲" },
-    ];
+    const db = await getDatabaseConnection();
+    const flightCrawledRepository = db.getRepository(FlightCrawled);
+    const flights = await flightCrawledRepository.find();
+
+    const mockFlights = flights.map(flight => ({
+      route: `${flight.origin} → ${flight.destination}`,
+      airline: flight.airline,
+      date: flight.flightDate,
+      price: flight.price,
+      trend: "▼",
+    }));
     
     return NextResponse.json({ message: "Flights data retrieved successfully", data: mockFlights }, { status: 200 })
   } catch (error: unknown) {
