@@ -12,7 +12,7 @@ export class TodoRecurrence {
   weeklyInterval!: number;
 
   @Column("simple-array")
-  weeklyDays!: number[];
+  weeklyDays!: string;
 
   @Column({ type: "varchar", nullable: true })
   weeklyEnd!: number | null;

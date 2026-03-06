@@ -120,7 +120,8 @@ export async function PUT(req: NextRequest) {
 
     const todoCheckRepository = db.getRepository(TodoCheck);
     const isChecked = await todoCheckRepository.findOne({
-      where: { todo: id, timestamp: format(new Date(), "yyyy-MM-dd") },
+      where: { todo: { id }, timestamp: format(new Date(), "yyyy-MM-dd") },
+      relations: ["todo"]
     });
 
     if (isChecked) {
@@ -133,7 +134,6 @@ export async function PUT(req: NextRequest) {
       });
     }
 
-    console.log("Existing Check:", isChecked);
     return NextResponse.json({ message: "Todo updated successfully", data: isChecked }, { status: 200 });
   } catch (error: unknown) {
     console.error("Update Error:", error);
