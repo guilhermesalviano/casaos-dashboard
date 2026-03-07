@@ -30,11 +30,11 @@ const prodType: DataSourceOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   synchronize: false,
-  logging: true,
+  logging: false,
 }
 
 const devOrProdDataSource = {
-  ...(isDevMode ? devType : prodType),
+  ...(prodType),
   entities: [Todo, TodoRecurrence, TodoCheck, FlightCrawled, User, Weather, WeatherHour],
   subscribers: [],
   migrations: [],

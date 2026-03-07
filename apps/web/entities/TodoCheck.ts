@@ -1,12 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
+import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import { Todo } from "./Todo";
 
 @Entity("todo_checks")
 export class TodoCheck {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryColumn()
+  id!: string;
 
-  @Column()
+  @PrimaryColumn()
   timestamp!: string;
 
   @Column({ type: "tinyint", width: 1, default: 0 })

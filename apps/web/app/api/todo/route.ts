@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabaseConnection } from "@/lib/db";
+import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { In, Like } from "typeorm";
 import { Todo } from "@/entities/Todo";
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
     const todoSaved = await todoRepository.save(todo);
 
     const todoCheck = {
+      id: uuidv4(),
       timestamp: format(new Date(), "yyyy-MM-dd"),
       checked,
       todo: todoSaved
@@ -128,6 +130,7 @@ export async function PUT(req: NextRequest) {
       await todoCheckRepository.update({ id: isChecked.id }, { checked });
     } else {
       await todoCheckRepository.save({
+        id: uuidv4(),
         timestamp: format(new Date(), "yyyy-MM-dd"),
         checked,
         todo: todo
