@@ -27,6 +27,7 @@ export default function WeatherCard() {
           reportStatus("weather", "success");
         })
         .catch(() => {
+          setWeather({error: "failed"})
           reportStatus("weather", "error");
         });
     };
@@ -39,6 +40,10 @@ export default function WeatherCard() {
 
   if (!weather) {
     return <Card className="weather-card">Carregando clima...</Card>;
+  }
+
+  if (weather.error) {
+    return <Card className="weather-card">Erro na busca de dados, tente novamente.</Card>;
   }
 
   const raining = isRaining(weather.code);
