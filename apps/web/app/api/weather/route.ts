@@ -9,15 +9,21 @@ export async function GET(req: NextRequest) {
 
     const weather = await fetchOpenMeteoAPI({ latitude, longitude });
 
-    const hours: any[] = weather.hourly.time.slice(1, 8).map((t: string, index: number) => {
-      return {
-        timestamp: t,
-        time: new Date(t).toLocaleTimeString("pt-BR", { hour: "2-digit" }) + "h",
-        temp: Math.round(weather.hourly.temperature_2m[index]),
-        icon: getWeatherIcon(weather.hourly.weather_code[index], weather.hourly.is_day[index] === 1),
-      };
-    });
+    const actualHour = Number(weather.hourly.time[0].match(/T(\d{2})/)?.[1])
+    const sliceEnd = actualHour >= 16 ? 6 : 8;
 
+    const hours = weather.hourly.time
+      .slice(1, sliceEnd)
+      .map((t: string, index: number) => {
+        return {
+          timestamp: t,
+          time: new Date(t).toLocaleTimeString("pt-BR", { hour: "2-digit" }) + "h",
+          temp: Math.round(weather.hourly.temperature_2m[index]),
+          icon: getWeatherIcon(weather.hourly.weather_code[index], weather.hourly.is_day[index] === 1),
+        };
+      });
+
+    // to do: salvar resultado da location no banco, para ficar sempre dinâmico
     // const location = await fetchNominatimAPI({ latitude, longitude });
 
     const weatherData =  {
