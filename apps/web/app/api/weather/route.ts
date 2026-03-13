@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
     const weather = await fetchOpenMeteoAPI({ latitude, longitude });
 
-    const hours: any[] = weather.hourly.time.slice(0, 6).map((t: string, index: number) => {
+    const hours: any[] = weather.hourly.time.slice(1, 8).map((t: string, index: number) => {
       return {
         timestamp: t,
         time: new Date(t).toLocaleTimeString("pt-BR", { hour: "2-digit" }) + "h",
