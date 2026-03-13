@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
       // })
       .andWhere("flight.price <> ''")
       .andWhere("flight.searchDate LIKE :date", { date: `${format(getMinDate.date, "yyyy-MM-dd")}%` })
+      .orderBy("flight.price", "ASC")
       .getRawMany();
 
     const flightsResult = flights.map((flight) => ({
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
       date: flight.flightDate,
       price: flight.price,
       trend: "▼",
-    }));
+    })).slice(0, 5);
 
     return NextResponse.json({ message: "Flights data retrieved successfully", data: flightsResult }, { status: 200 })
   } catch (error: unknown) {
