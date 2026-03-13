@@ -15,9 +15,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ columns: "25rem", columnGap: "1rem", margin: "1rem" }}>
+      <div className="gap-4 m-4!" style={{ columns: "25rem" }}>
         {DASHBOARD_CARDS.map((C, i) => (
-          <div key={i} style={{ breakInside: "avoid", marginBottom: "1rem", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
+          <div key={i} style={{ breakInside: "avoid", marginBottom: "1rem" }}>
             <C />
           </div>
         ))}
