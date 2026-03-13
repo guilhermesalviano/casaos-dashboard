@@ -14,24 +14,30 @@ export async function GET(req: NextRequest) {
 
     const flights = await flightCrawledRepository
       .createQueryBuilder("flight")
-      .select("flight.origin", "origin")
-      .addSelect("flight.airline", "airline")
+      .select("flight.airline", "airline")
+      .addSelect("flight.origin", "origin")
       .addSelect("flight.destination", "destination")
       .addSelect("flight.flightDate", "flightDate")
       .addSelect("flight.price", "price")
-      .where((qb) => {
-        const subQuery = qb
-        .subQuery()
-        .select(`MAX(CAST(s.price AS INT))`, "maxPrice")
-        .from("flight_crawled", "s")
-          .where("s.flightDate = flight.flightDate")
-          .getQuery();
+      .addSelect("flight.searchDate", "searchDate")
+      // .where((qb) => {
+      //   const subQuery = qb
+      //   .subQuery()
+      //   .select(`MAX(CAST(s.price AS INT))`, "maxPrice")
+      //   .from("flight_crawled", "s")
+      //     .where("s.flightDate = flight.flightDate")
+      //     .andWhere("s.origin <> flight.origin")
+      //     .andWhere("s.destination <> flight.destination")
+      //     .andWhere("s.price <> ''")
+      //     .getQuery();
 
-        return `CAST(flight.price AS INT) < (${subQuery})`;
-      })
+      //   return `CAST(flight.price AS INT) < (${subQuery})`;
+      // })
       .andWhere("flight.price <> ''")
       .andWhere("flight.searchDate LIKE :date", { date: `${format(getMinDate.date, "yyyy-MM-dd")}%` })
       .getRawMany();
+
+    console.log(flights)
 
     const flightsResult = flights.map((flight) => ({
       route: `${flight.origin} → ${flight.destination}`,
