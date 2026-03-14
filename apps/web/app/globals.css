@@ -495,7 +495,6 @@ body {
 .todo-summary {
   font-size: 11px;
   color: var(--muted);
-  margin-top: 12px;
   font-family: var(--font-mono);
   text-align: right;
 }

@@ -354,6 +354,7 @@ export default function TodoCard() {
     if (checked >= 1 && checked === todos.length) {
       handleFireConfetti();
     }
+
   }, [checked]);
 
   return (
@@ -396,9 +397,19 @@ export default function TodoCard() {
             </p>
           )}
         </div>
-
-        <div className="todo-summary">
-          {checked}/{todos?.length} concluídas
+        
+        <div className="flex justify-between items-center my-2!">
+          <div className="w-full mt-4 px-4">
+            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200">
+              <div 
+                className="h-full bg-linear-to-r from-amber-300 to-orange-500 transition-all duration-700 ease-out"
+                style={{ width: `${Math.round((checked/todos?.length)*100)}%` }}
+              />
+            </div>
+          </div>
+          <div className="todo-summary">
+            {checked}/{todos?.length} concluídas
+          </div>
         </div>
       </Card>
     </>

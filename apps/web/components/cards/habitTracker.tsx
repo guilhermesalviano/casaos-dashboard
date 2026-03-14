@@ -79,8 +79,8 @@ const HabitTracker = () => {
           <Image src="/joey-friends.gif" width={200} height={200} alt="joey" />
           <h2 className="text-2xl">Did you wake up early today???</h2>
           <div className="flex gap-8">
-            <button onClick={() => {track("wakedup")}} className="bg-amber-500 hover:bg-amber-600 cursor-pointer text-white rounded-xs px-4! py-2!">Siiiim</button>
-            <button className="border border-amber-500 hover:bg-amber-500 cursor-pointer hover:text-white rounded-xs px-4! py-2!">Não :(</button>
+            <button onClick={() => {track("wakedup")}} className="bg-orange-500 hover:bg-orange-600 cursor-pointer text-white rounded-xs px-4! py-2!">Siiiim!</button>
+            <button className="border border-orange-500 hover:bg-orange-500 cursor-pointer hover:text-white rounded-xs px-4! py-2!">Não :(</button>
           </div>
         </div>
       ) : (
@@ -95,11 +95,19 @@ const HabitTracker = () => {
                 <span key={day} className="flex flex-col justify-center items-center gap-2">
                   <div className="flex justify-center">
                     {value ? (
-                      <div className="flex bg-amber-500 border border-amber-500 rounded-full">
-                        ✔️
+                      <div className="flex items-center justify-center bg-orange-500 border border-orange-500 rounded-full w-6 h-6">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <path 
+                            d="M3 8.5L6 11.5L13 4.5" 
+                            stroke="white" 
+                            strokeWidth="2.5" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                       </div>
                     ) : (
-                      <div className="flex w-6 h-6 border border-amber-500 rounded-full" />
+                      <div className="flex w-6 h-6 border border-orange-500 rounded-full" />
                     )}
                   </div>
                   {day.slice(0, 3)}
