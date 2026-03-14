@@ -15,7 +15,9 @@ export async function GET(req: NextRequest) {
       .orderBy("date", "DESC")
       .getRawMany();
 
-    if (records.length === 0) return 0;
+    if (records.length === 0) {
+      return NextResponse.json({ message: "Habit retrieve successfully", data: { streak: 0 } }, { status: 200 })
+    };
 
     let streak = 0;
 
@@ -55,7 +57,7 @@ export async function GET(req: NextRequest) {
       lastDayOfWeek
     }
 
-    return NextResponse.json({ message: "Habit saved successfully", data: streakMap }, { status: 200 })
+    return NextResponse.json({ message: "Habit retrieve successfully", data: streakMap }, { status: 200 })
   } catch (error: unknown) {
     console.error(error)
     return NextResponse.json({ error: "Failed to retrieve todos data" }, { status: 500 });
