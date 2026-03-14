@@ -60,15 +60,14 @@ const HabitTracker = () => {
           }
           setWeekDaysMap(weekDaysMapLocal);
         }
-
-        reportStatus("streak", "success");
       })
       .catch(() => {
-        reportStatus("streak", "error");
+        reportStatus("habit", "error");
       });
   };
 
   useEffect(() => {
+    reportStatus("habit", "success");
     fetchHabit();
   }, []);
   
@@ -76,7 +75,7 @@ const HabitTracker = () => {
     <div className="card flex justify-center flex-col items-center">
       {!haveYouWakeUpEarlyToday ? (
         <div className="flex flex-col justify-center items-center gap-4">
-          <Image src="/joey-friends.gif" width={200} height={200} alt="joey" />
+          <Image src="/joey-friends.gif" width={200} height={200} alt="joey" unoptimized />
           <h2 className="text-2xl">Did you wake up early today???</h2>
           <div className="flex gap-8">
             <button onClick={() => {track("wakedup")}} className="bg-orange-500 hover:bg-orange-600 cursor-pointer text-white rounded-xs px-4! py-2!">Siiiim!</button>

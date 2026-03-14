@@ -28,10 +28,10 @@ export async function GET(req: NextRequest) {
     let lastDayOfWeek: Date | null = null;
 
     for (let i = 0; i < records.length; i++) {
-      const recordDate = new Date(records[i].date + "T00:00:00"); 
+      const recordDate = new Date(records[i].date); 
 
       if (i === records.length-1) {
-        lastDayOfWeek = new Date(records[i].date + "T00:00:00");
+        lastDayOfWeek = new Date(records[i].date);
       }
 
       if (i === 0) {

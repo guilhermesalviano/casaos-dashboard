@@ -14,7 +14,8 @@ export const StatusProvider = ({ children }: { children: React.ReactNode }) => {
   const [systems, setSystems] = useState<Record<string, ServiceStatus>>({
     news: "loading",
     weather: "loading",
-    stocks: "loading",
+    habit: "loading",
+    stocks: "success",
     calendar: "loading"
   });
 
