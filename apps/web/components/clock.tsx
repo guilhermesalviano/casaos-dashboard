@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Alert, { AlertType } from "@/components/Alert";
+import Alert, { AlertType } from "@/components/alert";
 import { ALERTS } from "@/constants";
 
 export default function Clock() {
