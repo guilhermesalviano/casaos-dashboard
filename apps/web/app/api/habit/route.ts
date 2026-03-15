@@ -25,14 +25,14 @@ export async function GET(req: NextRequest) {
     today.setHours(0, 0, 0, 0);
 
     let expectedDate = new Date(today);
-    let lastDayOfWeek: Date | null = null;
+    // let lastDayOfWeek: Date | null = null;
 
     for (let i = 0; i < records.length; i++) {
       const recordDate = new Date(records[i].date); 
 
-      if (i === records.length-1) {
-        lastDayOfWeek = new Date(records[i].date);
-      }
+      // if (i === records.length-1) {
+      //   lastDayOfWeek = new Date(records[i].date);
+      // }
 
       if (i === 0) {
         const diffDays = Math.floor((today.getTime() - recordDate.getTime()) / (1000 * 3600 * 24));
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
 
     const streakMap = {
       streak,
-      lastDayOfWeek
+      lastDayOfWeek: expectedDate
     }
 
     return NextResponse.json({ message: "Habit retrieve successfully", data: streakMap }, { status: 200 })

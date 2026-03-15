@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const HabitTracker = () => {
-  const [streak, setStreak] = useState(0);
+  const [streakState, setStreakState] = useState(0);
   const [weekDaysMap, setWeekDaysMap] = useState<Object>();
   const [haveYouWakeUpEarlyToday, setHaveYouWakeUpEarlyToday] = useState(false);
   const { reportStatus } = useStatus();
@@ -39,7 +39,7 @@ const HabitTracker = () => {
 
         if (format(today, "yyyy-MM-dd") !== format(lastDayOfWeek, "yyyy-MM-dd")) return;
 
-        setStreak(streak);
+        setStreakState(streak);
         setHaveYouWakeUpEarlyToday(true);
 
         const DAYS_OF_WEEK = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
@@ -86,7 +86,7 @@ const HabitTracker = () => {
         <>
           <h2 className="text-2xl py-2!">Days waking up early</h2>
           <Image src="/flame.png" width="60" height="60" alt="flame" unoptimized />
-          <h2 className="text-4xl">{streak}</h2>
+          <h2 className="text-4xl">{streakState}</h2>
           <p className="text-xl">Day streak</p>
           <div className="week flex gap-4 pt-4!">
             {weekDaysMap && Object.entries(weekDaysMap).reverse().map(([day, value]) => {
