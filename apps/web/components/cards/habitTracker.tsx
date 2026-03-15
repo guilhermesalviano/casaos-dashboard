@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const HabitTracker = () => {
   const [streakState, setStreakState] = useState(0);
   const [weekDaysMap, setWeekDaysMap] = useState<Object>();
-  const [haveYouWakeUpEarlyToday, setHaveYouWakeUpEarlyToday] = useState(false);
+  const [questionToday, setQuestionToday] = useState(false);
   const [noToday, setNoToday] = useState(false);
   const { reportStatus } = useStatus();
 
@@ -18,7 +18,7 @@ const HabitTracker = () => {
   const handleNo = () => {
     localStorage.setItem("habitNoToday", todayStr);
     setNoToday(true);
-    setHaveYouWakeUpEarlyToday(true);
+    setQuestionToday(true);
   };
 
   const track = async (answer: string) => {
@@ -33,7 +33,7 @@ const HabitTracker = () => {
     });
 
     fetchHabit();
-    setHaveYouWakeUpEarlyToday(!!answer);
+    setQuestionToday(!!answer);
     localStorage.setItem("habitToday", todayStr);
   }
 
@@ -44,12 +44,14 @@ const HabitTracker = () => {
         return res.json();
       })
       .then((data) => {
+        reportStatus("habit", "success");
+
         const { streak, lastDayOfWeek } = data.data;
 
         if (todayStr.split("T")[0] !== lastDayOfWeek.split("T")[0]) return;
 
         setStreakState(streak);
-        setHaveYouWakeUpEarlyToday(true);
+        setQuestionToday(true);
 
         const DAYS_OF_WEEK = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
 
@@ -76,16 +78,15 @@ const HabitTracker = () => {
   };
 
   useEffect(() => {
-    reportStatus("habit", "success");
-
     const noTodayStored = localStorage.getItem("habitNoToday");
     const todayStored = localStorage.getItem("habitToday");
     if (noTodayStored === todayStr) {
       setNoToday(true);
-      setHaveYouWakeUpEarlyToday(false);
+      setQuestionToday(true);
+      reportStatus("habit", "success");
       return;
     } else if (todayStored === todayStr){
-      setHaveYouWakeUpEarlyToday(true);
+      setQuestionToday(true);
     }
 
     fetchHabit();
@@ -93,7 +94,7 @@ const HabitTracker = () => {
   
   return (
     <div className="card flex justify-center flex-col items-center">
-      {!haveYouWakeUpEarlyToday ? (
+      {!questionToday ? (
         <div className="flex flex-col justify-center items-center gap-4">
           <Image src="/joey-friends.gif" width={200} height={200} alt="joey" unoptimized />
           <h2 className="text-2xl">Did you wake up early today???</h2>
