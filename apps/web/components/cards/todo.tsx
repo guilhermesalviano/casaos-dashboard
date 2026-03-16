@@ -274,6 +274,7 @@ export default function TodoCard() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [showJewel, setShowJewel] = useState(false);
+  const [inactiveTodo, setInactiveTodo] = useState(false);
 
   useEffect(() => {
     fetch("/api/todo")
@@ -304,9 +305,12 @@ export default function TodoCard() {
   };
 
   const toggleCheck = async (id: number, currentStatus: boolean) => {
+    if (inactiveTodo) return;
+
+    setInactiveTodo(true);
     const newStatus = !currentStatus;
 
-    jewelHandle();
+    if (!currentStatus) jewelHandle();
 
     setTodos((prev) =>
       prev.map((t) => (t.id === id ? { ...t, checked: newStatus } : t))
@@ -318,7 +322,9 @@ export default function TodoCard() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ id, checked: newStatus }),
-    });
+    }).finally(() => {
+      setInactiveTodo(false);
+    })
   };
 
   const handleFireConfetti = () => {
@@ -357,7 +363,7 @@ export default function TodoCard() {
 
     setTimeout(() => {
       setShowJewel(false);
-    }, 3000);
+    }, 2000);
   }
 
   const checked = todos?.filter((t) => t.checked).length;
@@ -376,7 +382,7 @@ export default function TodoCard() {
       )}
 
       {showJewel && (
-        <div className="absolute right-4 bottom-4 z-30">
+        <div className="fixed left-4 top-4 z-30">
           <Image src="/lets-go.gif" width="300" height="300" alt="jewel" unoptimized />
         </div>
       )}
@@ -392,12 +398,23 @@ export default function TodoCard() {
           </button>
         </div>
 
-        <div className="todo-list">
+        <div 
+          className={`todo-list ${inactiveTodo ? 'opacity-50 pointer-events-none select-none' : ''}`}
+          aria-disabled={inactiveTodo}
+        >
+          {inactiveTodo && ( // show loading while the list is inactive
+            <div className="relative h-full w-full bg-white z-30">
+              <div className="absolute flex items-center justify-center top-20 right-32">
+                <div className="w-14 h-14 rounded-full border-4 border-gray-200" />
+                <div className="absolute w-14 h-14 rounded-full border-4 border-transparent border-t-cyan-500 animate-spin" />
+              </div>
+            </div>
+          )}
           {todos?.map((t) => (
             <div
               key={t.id}
               className={`todo-item ${t.checked ? "done" : ""}`}
-              onClick={() => toggleCheck(t.id, t.checked)}
+              onClick={() => !inactiveTodo && toggleCheck(t.id, t.checked)}
             >
               <div className="todo-checkbox">{t.checked ? "✓" : ""}</div>
               <span className="todo-text">{t.title}</span>
