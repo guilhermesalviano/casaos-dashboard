@@ -6,7 +6,7 @@ export interface ForecastItem {
   icon: string;
 }
 
-export interface WeatherData {
+export interface WeatherInternalAPIResponse {
   date: string;
   city: string;
   state: string;
