@@ -1,0 +1,63 @@
+export function getWeatherIcon(code: number, isDay: boolean = true): string {
+  if (code === 0) return isDay ? "☀️" : "🌙";
+  if (code === 1) return isDay ? "🌤️" : "🌙";
+  if (code === 2) return isDay ? "⛅" : "☁️";
+  if (code === 3) return "☁️";
+  if (code === 45) return "🌫️";
+  if (code === 48) return "🌫️";
+  if (code === 51) return isDay ? "🌦️" : "🌧️";
+  if (code === 53) return isDay ? "🌦️" : "🌧️";
+  if (code === 55) return "🌧️";
+  if (code === 56) return "🌨️";
+  if (code === 57) return "🌨️";
+  if (code === 61) return "🌧️";
+  if (code === 63) return "🌧️";
+  if (code === 65) return "🌧️";
+  if (code === 66) return "🌨️";
+  if (code === 67) return "🌨️";
+  if (code === 71) return "❄️";
+  if (code === 73) return "❄️";
+  if (code === 75) return "❄️";
+  if (code === 77) return "🌨️";
+  if (code === 80) return isDay ? "🌦️" : "🌧️";
+  if (code === 81) return "🌧️";
+  if (code === 82) return "⛈️";
+  if (code === 85) return "🌨️";
+  if (code === 86) return "🌨️";
+  if (code === 95) return "⛈️";
+  if (code === 96) return "⛈️";
+  if (code === 99) return "⛈️";
+  return "🌡️";
+}
+
+export function getWeatherCondition(code: number): string {
+  if (code === 0) return "Céu Limpo";
+  if (code === 1) return "Predominantemente Limpo";
+  if (code === 2) return "Parcialmente Nublado";
+  if (code === 3) return "Nublado";
+  if (code === 45) return "Neblina";
+  if (code === 48) return "Neblina com Gelo";
+  if (code === 51) return "Garoa Leve";
+  if (code === 53) return "Garoa Moderada";
+  if (code === 55) return "Garoa Intensa";
+  if (code === 56) return "Garoa Gelada Leve";
+  if (code === 57) return "Garoa Gelada Intensa";
+  if (code === 61) return "Chuva Fraca";
+  if (code === 63) return "Chuva Moderada";
+  if (code === 65) return "Chuva Forte";
+  if (code === 66) return "Chuva Gelada Leve";
+  if (code === 67) return "Chuva Gelada Forte";
+  if (code === 71) return "Neve Fraca";
+  if (code === 73) return "Neve Moderada";
+  if (code === 75) return "Neve Forte";
+  if (code === 77) return "Grãos de Neve";
+  if (code === 80) return "Pancadas de Chuva Fracas";
+  if (code === 81) return "Pancadas de Chuva Moderadas";
+  if (code === 82) return "Pancadas de Chuva Fortes";
+  if (code === 85) return "Pancadas de Neve Fracas";
+  if (code === 86) return "Pancadas de Neve Fortes";
+  if (code === 95) return "Tempestade";
+  if (code === 96) return "Tempestade com Granizo";
+  if (code === 99) return "Tempestade com Granizo Forte";
+  return "Condição Desconhecida";
+}
