@@ -89,7 +89,7 @@ body {
   top: 0;
   background: var(--background);
   backdrop-filter: blur(10px);
-  z-index: 40;
+  z-index: 60;
 }
 .header-brand {
   font-family: var(--font-mono);
