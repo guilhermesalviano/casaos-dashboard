@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useStatus } from "@/contexts/statusContext";
 import SectionTitle from "../sectionTitle";
 import Card from "../card";
-import { useStatus } from "@/contexts/statusContext";
-import { memo } from "react";
 
-const NewsCard = memo(function NewsCard() {
+const NewsCard = () => {
   const [news, setNews] = useState<any>(null);
   const { reportStatus } = useStatus();
   const lastFetchRef = useRef<number>(0);
@@ -54,6 +53,6 @@ const NewsCard = memo(function NewsCard() {
       </div>
     </Card>
   );
-})
+};
 
 export default NewsCard;

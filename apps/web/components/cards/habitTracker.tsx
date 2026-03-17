@@ -4,6 +4,7 @@ import { useStatus } from "@/contexts/statusContext";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Card from "../card";
 
 const HabitTracker = () => {
   const [streakState, setStreakState] = useState(0);
@@ -93,7 +94,7 @@ const HabitTracker = () => {
   }, []);
   
   return (
-    <div className="card flex justify-center flex-col items-center">
+    <Card className="flex justify-center flex-col items-center">
       {!questionToday ? (
         <div className="flex flex-col justify-center items-center gap-4">
           <Image src="/joey-friends.gif" width={200} height={200} alt="joey" unoptimized />
@@ -166,7 +167,7 @@ const HabitTracker = () => {
           )}
         </>
       )}
-    </div>
+    </Card>
   );
 };
 
