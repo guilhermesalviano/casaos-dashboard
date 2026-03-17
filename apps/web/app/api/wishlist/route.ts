@@ -1,10 +1,20 @@
-import { WishlistAmazon } from "@/entities/WishlistAmazon";
+import { NextRequest, NextResponse } from "next/server";
 import { getDatabaseConnection } from "@/lib/db";
 import { format } from "date-fns";
-import { NextRequest, NextResponse } from "next/server";
+import { WishlistAmazon } from "@/entities/WishlistAmazon";
+import { WishlistInternalAPIResponse } from "@/types/wishlist-api";
+import { createMemoryCache } from "@/utils/in-memory-cache";
+import { SECONDS_TO_MINUTES } from "@/constants";
+
+const wishlistCache = createMemoryCache<WishlistInternalAPIResponse[]>(SECONDS_TO_MINUTES * 60 * 8);
 
 export async function GET(req: NextRequest) {
   try {
+    const cached = wishlistCache.get();
+    if (cached) {
+      return NextResponse.json({ message: "Wishlist data from cache successfully", data: cached });
+    }
+
     const today = new Date();
 
     const db = await getDatabaseConnection();
@@ -44,15 +54,17 @@ export async function GET(req: NextRequest) {
       return parsePrice(a.price) - parsePrice(b.price);
     });
 
-    const list = minPricesPerBookOrdered.map(item => ({
+    const wishlistData: WishlistInternalAPIResponse[] = minPricesPerBookOrdered.map(item => ({
       name: item.title,
       price: item.price,
       link: item.link,
       store: "Amazon",
       alert: true,
     }));
-    
-    return NextResponse.json({ message: "Products data retrieved successfully", data: list }, { status: 200 })
+
+    wishlistCache.set(wishlistData);
+
+    return NextResponse.json({ message: "Products data retrieved successfully", data: wishlistData }, { status: 200 })
   } catch (error: unknown) {
     console.error(error)
     return NextResponse.json({ error: "Failed to retrieve products data" }, { status: 500 });
