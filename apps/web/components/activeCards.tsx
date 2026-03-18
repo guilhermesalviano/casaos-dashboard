@@ -1,15 +1,15 @@
 "use client";
 
+import { useEffect } from "react";
+import { useStatus } from "@/contexts/statusContext";
 import WeatherCard from "@/components/cards/weather";
 import CalendarCard from "@/components/cards/calendar";
 import StocksCard from "@/components/cards/stocks";
 import NewsCard from "@/components/cards/news";
 import FlightsCard from "@/components/cards/flights";
 import TodoCard from "@/components/cards/todo";
-import WishlistCard from "@/components/cards/AmazonWishlist";
+import WishlistCard from "@/components/cards/amazonWishlist";
 import HabitTracker from "@/components/cards/habitTracker";
-import { useEffect } from "react";
-import { useStatus } from "@/contexts/statusContext";
 
 const DASHBOARD_CARDS = [
   WeatherCard,

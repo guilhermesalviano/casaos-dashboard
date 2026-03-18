@@ -2,8 +2,8 @@ import Loading from "@/components/loading";
 import Clock from "@/components/clock";
 import SystemsStatus from "@/components/systemsStatus";
 import ThemeToggle from "@/components/themeToggle";
-import ActiveCards from "@/components/cards/cards";
-import PushButton from "@/components/PushButton";
+import ActiveCards from "@/components/activeCards";
+import PushButton from "@/components/pushButton";
 
 export default function Page() {
   return (
