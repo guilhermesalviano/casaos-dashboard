@@ -7,6 +7,12 @@ import { Todo } from "@/entities/Todo";
 import { TodoRecurrence } from "@/entities/TodoRecurrence";
 import { TodoCheck } from "@/entities/TodoCheck";
 
+const PRIORITYWEIGHT: Record<string, number> = {
+  high: 1,
+  medium: 2,
+  low: 3,
+};
+
 export async function GET(req: NextRequest) {
   try {
     const today = new Date();
@@ -35,13 +41,20 @@ export async function GET(req: NextRequest) {
       return Number(end) >= today.getTime();
     });
 
-    todosFiltered.sort((a, b) => {
+    const sortedTodos = [...todosFiltered].sort((a, b) => {
+      if (a.priority && b.priority) {
+        const weightA = PRIORITYWEIGHT[a.priority.toLowerCase()] || 99;
+        const weightB = PRIORITYWEIGHT[b.priority.toLowerCase()] || 99;
+
+        if (weightA !== weightB) {
+          return weightA - weightB;
+        }
+
+        if (PRIORITYWEIGHT[a.priority] == 1) return a.title.localeCompare(b.title);
+      }
+
       if (a.priority && !b.priority) return -1;
       if (!a.priority && b.priority) return 1;
-
-      if (a.priority && b.priority) {
-        return a.title.localeCompare(b.title);
-      }
 
       return 0;
     });
@@ -49,14 +62,14 @@ export async function GET(req: NextRequest) {
     const checksResult = await todoCheckRepository.find({
       where: [
         {
-          todo: In(todosFiltered.map(todo => todo.id)),
+          todo: In(sortedTodos.map(todo => todo.id)),
           timestamp: Like(`${format(today, "yyyy-MM-dd")}%`)
         }
       ],
       relations: ["todo"]
     });
 
-    const todosMapped = todosFiltered.map((todo) => {
+    const todosMapped = sortedTodos.map((todo) => {
       const check = checksResult.find(check => check.todo?.id === todo.id);
 
       return {
