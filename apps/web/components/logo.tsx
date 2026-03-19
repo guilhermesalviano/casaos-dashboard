@@ -11,6 +11,7 @@ export default function Logo() {
           width={32}
           height={32} 
           alt="coredash logo" 
+          unoptimized
           className="relative rounded-full border border-slate-100 shadow-sm"
         />
       </div>
