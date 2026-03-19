@@ -21,7 +21,7 @@ export default function TodoCard() {
   }, []);
 
   const add = async (form: NewTaskForm) => {
-    const newTask = { id: Date.now(), title: form.title.trim(), checked: false, priority: form.priority };
+    const newTask = { id: Date.now(), title: form.title.trim(), checked: 0, priority: form.priority };
 
     const task = { 
       repeat: form.recurrence.repeat,
@@ -42,13 +42,13 @@ export default function TodoCard() {
     setTodos((t) => [...t, newTask]);
   };
 
-  const toggleCheck = async (id: number, currentStatus: boolean) => {
+  const toggleCheck = async (id: number, currentStatus: number) => {
     if (inactiveTodo) return;
-
     setInactiveTodo(true);
-    const newStatus = !currentStatus;
 
-    if (!currentStatus) jewelHandle();
+    const newStatus = (currentStatus === 0 ? 1 : 0);
+
+    if (newStatus !== 0) jewelHandle();
 
     setTodos((prev) =>
       prev.map((t) => (t.id === id ? { ...t, checked: newStatus } : t))
@@ -116,7 +116,7 @@ export default function TodoCard() {
           {todos?.map((t) => (
             <div
               key={t.id}
-              className={`todo-item ${t.checked ? "done" : ""}`}
+              className={`todo-item ${t.checked === 1 ? "done" : ""}`}
               onClick={() => !inactiveTodo && toggleCheck(t.id, t.checked)}
             >
               <div
@@ -125,7 +125,7 @@ export default function TodoCard() {
               >
                 ...
               </div>
-              <div className="todo-checkbox">{t.checked ? "✓" : ""}</div>
+              <div className="todo-checkbox">{t.checked === 1 ? "✓" : ""}</div>
               <span className="todo-text">{t.title}</span>
               <div
                 className="todo-dot"

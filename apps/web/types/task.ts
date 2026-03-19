@@ -3,7 +3,7 @@ export type Priority = "high" | "medium" | "low";
 export interface TodoState {
   id: number;
   title: string;
-  checked: boolean;
+  checked: number;
   priority: Priority;
 }
 
