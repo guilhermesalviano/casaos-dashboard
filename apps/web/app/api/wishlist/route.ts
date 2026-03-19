@@ -4,9 +4,20 @@ import { format } from "date-fns";
 import { WishlistAmazon } from "@/entities/WishlistAmazon";
 import { WishlistInternalAPIResponse } from "@/types/wishlist-api";
 import { createMemoryCache } from "@/utils/in-memory-cache";
-import { SECONDS_TO_MINUTES } from "@/constants";
 
-const wishlistCache = createMemoryCache<WishlistInternalAPIResponse[]>(SECONDS_TO_MINUTES * 60 * 8);
+const now = new Date();
+
+let targetTime = new Date(now);
+targetTime.setHours(8, 0, 0, 0);
+
+if (now > targetTime) {
+  targetTime.setDate(targetTime.getDate() + 1);
+}
+
+const diffInMs = targetTime.getTime() - now.getTime();
+const secondsToNext8AM = Math.floor(diffInMs / 1000);
+
+const wishlistCache = createMemoryCache<WishlistInternalAPIResponse[]>(secondsToNext8AM);
 
 export async function GET(req: NextRequest) {
   try {
