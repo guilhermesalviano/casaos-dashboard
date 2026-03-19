@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
       return {
         id: todo.id,
         title: todo.title,
-        checked: check?.checked ?? false,
+        checked: check?.checked ?? 0,
         priority: todo.priority
       }
     });
