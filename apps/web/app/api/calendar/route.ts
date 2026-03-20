@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGoogleCalendarAPI } from "@/services/google-calendar-api";
 import { format, parseISO } from "date-fns";
+import { createMemoryCache } from "@/utils/in-memory-cache";
+import { SECONDS_TO_MINUTES } from "@/constants";
+import { CalendarInternalAPIResponse } from "@/types/calendar";
+
+const calendarCache = createMemoryCache<CalendarInternalAPIResponse>(SECONDS_TO_MINUTES * 10);
 
 export async function GET(req: NextRequest) {
+  const cached = calendarCache.get();
+  if (cached) {
+    return NextResponse.json({ message: "Calendar data from cache successfully", data: cached });
+  }
+
   try {
     const todayStr = format(new Date(), "yyyy-MM-dd");
     const events = await fetchGoogleCalendarAPI();
 
     const importantEvents = events
       .filter((event) => /birthday|anivers[áa]rio/i.test(event.summary))
-      .filter((event) => event.start.date !== todayStr)
+      .filter((event) => event.start.date !== format(new Date(), "dd/MM/yyyy"))
       .map((event) => {
         return {
           id: event.id,
@@ -36,11 +46,19 @@ export async function GET(req: NextRequest) {
           start: (event.start.dateTime ? format(event.start.dateTime, "HH:mm") : "All day"),
           end: (event.end.dateTime ? format(event.end.dateTime, "HH:mm") : ""),
           title: event.summary,
-          color: "#6EE7B7"
+          color: "#6EE7B7",
+          type: /birthday|anivers[áa]rio/i.test(event.summary) ? "birthday" : "event"
         }
       });
 
-    return NextResponse.json({ message: "Calendar data retrieved successfully", data: { todayEvents, importantEvents } });
+    const responseBody: CalendarInternalAPIResponse = { 
+      todayEvents, 
+      importantEvents 
+    };
+
+    calendarCache.set(responseBody)
+
+    return NextResponse.json({ message: "Calendar data retrieved successfully", data: responseBody } );
   } catch (error: unknown) {
     console.error(error)
     return NextResponse.json({ error: "Failed to retrieve calendar data" }, { status: 500 });

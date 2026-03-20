@@ -40,3 +40,22 @@ export interface GoogleCalendarEvent {
   };
   eventType: string;
 }
+
+export interface CalendarInternalAPIResponse {
+  todayEvents: {
+    id: string;
+    start: string;
+    end: string;
+    title: string;
+    type?: string;
+    color?: string;
+  }[],
+  importantEvents: {
+    id: string;
+    start: string;
+    end: string;
+    title: string;
+    type?: string;
+    color?: string;
+  }[]
+}
