@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SectionTitle from "../sectionTitle";
-import Card from "../card";
 import { useStatus } from "@/contexts/statusContext";
+import { differenceInDays, parse, startOfDay } from "date-fns";
+import Card from "../card";
+
+const EVENT_MAPPING: Record<string, { emoji: string; bg:string; color: string;}> = {
+  birthday: { emoji: "🎂", bg: "bg-cyan-50", color: "text-cyan-700" },
+  travel: { emoji: "✈️", bg: "bg-orange-50", color: "text-orange-700" },
+  default: { emoji: "📅", bg: "bg-slate-50", color: "text-slate-600" }
+};
 
 export default function CalendarCard() {
   const now = new Date();
@@ -25,23 +31,50 @@ export default function CalendarCard() {
       });
   }, []);
 
+  const generateNextEventMessage = (date: string, title: string) => {
+    const eventDate = parse(date, "dd/MM/yyyy", new Date());
+
+    if (isNaN(eventDate.getTime())) return `Próximo evento: ${title}`;
+
+    const today = startOfDay(new Date());
+    const days = differenceInDays(startOfDay(eventDate), today);
+
+    if (days === 0) return `Hoje é o ${title}!`;
+    if (days < 0) return `${title} já passou`;
+    
+    return `Faltam ${days} ${days === 1 ? 'dia' : 'dias'} para o ${title}`;
+  }
+
   if (calendar?.length === 0 || !calendar) return;
 
   return (
     <Card>
-      <SectionTitle>📅 Calendário</SectionTitle>
+      <h2 className="section-title mb-0!">📅 Calendário</h2>
+      {calendar?.importantEvents.map((ev: any) => (
+        <div key={ev.id} className={`flex items-center gap-2 text-[0.7rem] my-2! px-2! py-1! rounded-md font-medium animate-appear ${EVENT_MAPPING[ev.type].bg} ${EVENT_MAPPING[ev.type].color}`}>
+          <span className="animate-bounce">
+            { EVENT_MAPPING[ev.type].emoji }
+          </span>
+          <span>
+            { generateNextEventMessage(ev.start, ev.title) }
+          </span>
+        </div>
+      ))}
       <div className="calendar-date">{dateStr}</div>
       <div className="calendar-events">
-        {(calendar?.length === 0 || !calendar) && (
+        {(calendar?.todayEvents.length === 0 || !calendar) && (
           <div className="calendar-event" style={{ borderLeft: `3px solid #9CA3AF` }}>
             <span className="event-title">Nenhum evento para hoje</span>
           </div>
         )}
-        {calendar?.map((ev: any) => (
-          <div key={ev.id} className="calendar-event" style={{ borderLeft: `3px solid ${ev.color}` }}>
-            <span className="event-title">Personal:</span>
-            <span className="event-time">{ev.start} -</span>
-            <span className="event-time">{ev.end}</span>
+        {calendar?.todayEvents.map((ev: any) => (
+          <div key={ev.id} className="calendar-event max-sm:flex-col max-sm:gap-2!" style={{ borderLeft: `3px solid ${ev.color}` }}>
+            <div className="flex items-center gap-2">
+              <span className="event-title">Personal:</span>
+              <span className="event-time">{ev.start}</span>
+              <span className="">-</span>
+              <span className="event-time">{ev.end}</span>
+            </div>
             <span className="event-title">{ev.title}</span>
           </div>
         ))}

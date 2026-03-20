@@ -18,12 +18,14 @@ export interface GoogleCalendarEvent {
     self?: boolean;
   };
   start: {
-    dateTime: string;
-    timeZone: string;
+    dateTime?: string;
+    timeZone?: string;
+    date?: string;
   };
   end: {
-    dateTime: string;
-    timeZone: string;
+    dateTime?: string;
+    timeZone?: string;
+    date?: string;
   };
   recurringEventId?: string;
   originalStartTime?: {

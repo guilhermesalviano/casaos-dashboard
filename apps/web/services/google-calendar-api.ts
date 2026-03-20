@@ -1,5 +1,6 @@
 import { GOOGLE_API_CONFIG } from '@/constants';
 import { GoogleCalendarEvent } from '@/types/calendar';
+import { addDays } from 'date-fns';
 import { google } from 'googleapis';
 
 export type CalendarEventsResponse = GoogleCalendarEvent[];
@@ -18,7 +19,7 @@ export async function fetchGoogleCalendarAPI(): Promise<CalendarEventsResponse> 
   const now = new Date();
 
   const startOfDay = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-  const endOfDay = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+  const endOfDay = new Date(addDays(now, 7)).toISOString();
 
   const calendarsIds = process.env.GOOGLE_CALENDAR_IDS?.split(";");
 
