@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NewTaskForm, priorityColor, TodoState } from "@/types/task";
 import handleFireConfetti from "@/components/confetti";
 import SectionTitle from "../sectionTitle";
@@ -84,6 +84,15 @@ export default function TodoCard() {
     if (checked >= 1 && checked === todos.length) handleFireConfetti();
   }, [checked]);
 
+  const { pending, completed } = useMemo(() => {
+    return {
+      pending: todos.filter(t => t.checked === 0),
+      completed: todos.filter(t => t.checked === 1)
+    };
+  }, [todos]);
+
+  const progress = Math.round((checked / (todos?.length || 1)) * 100); 
+
   return (
     <>
       {modalOpen && (
@@ -118,7 +127,7 @@ export default function TodoCard() {
               </div>
             </div>
           )}
-          {todos?.filter((t) => t.checked === 0).map((t) => (
+          {pending?.map((t) => (
             <div
               key={t.id}
               className={`todo-item ${t.checked === 1 ? "done" : ""}`}
@@ -139,7 +148,7 @@ export default function TodoCard() {
             </div>
           ))}
 
-          {todos?.filter((t) => t.checked === 1).map((t) => (
+          {completed?.map((t) => (
             <div
               key={t.id}
               className={`todo-item ${t.checked === 1 ? "done" : ""}`}
@@ -171,16 +180,11 @@ export default function TodoCard() {
           <div className="w-full mt-4 px-4">
             <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200">
               <div 
-                className={`h-full transition-all duration-700 ease-out ${
-                  checked === todos?.length
-                    ? "bg-linear-to-r from-emerald-400 to-cyan-400"
-                    : checked / todos?.length >= 0.66
-                    ? "bg-linear-to-r from-cyan-500 via-teal-400 to-emerald-400"
-                    : checked / todos?.length >= 0.33
-                    ? "bg-linear-to-r from-blue-600 via-blue-500 to-cyan-500"
-                    : "bg-linear-to-r from-slate-700 to-blue-700"
-                }`}
-                style={{ width: `${Math.round((checked / (todos?.length || 1)) * 100)}%` }}
+                className="h-full bg-cyan-500 transition-transform duration-500"
+                style={{ 
+                  transform: `translateX(-${100 - progress}%)`,
+                  width: '100%' 
+                }}
               />
             </div>
           </div>
