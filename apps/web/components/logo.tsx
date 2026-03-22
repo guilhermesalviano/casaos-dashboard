@@ -10,8 +10,7 @@ export default function Logo() {
           src="/icon.png" 
           width={32}
           height={32} 
-          alt="coredash logo" 
-          unoptimized
+          alt="coredash logo"
           className="relative rounded-full border border-slate-100 shadow-sm"
         />
       </div>

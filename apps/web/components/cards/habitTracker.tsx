@@ -134,7 +134,7 @@ const HabitTracker = () => {
           ) : (
             <>
               <h2 className="text-2xl py-2!">Days waking up early</h2>
-              <Image src="/flame.png" width="60" height="60" alt="flame" unoptimized />
+              <Image src="/flame.png" width="60" height="60" alt="flame" />
               <h2 className="text-4xl">{streakState}</h2>
               <p className="text-xl">Day streak</p>
               <div className="week flex gap-4 pt-4!">
