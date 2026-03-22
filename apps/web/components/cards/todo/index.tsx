@@ -11,19 +11,21 @@ import TodoItem from "./todoItem";
 export default function TodoCard() {
   const [todos, setTodos] = useState<TodoState[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [showJewel, setShowJewel] = useState(false);
-  const [isBusy, setIsBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(true);
+  // const [showJewel, setShowJewel] = useState(false);
 
   const isFirstRender = useRef(true);
   const jewelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     fetch("/api/todo")
-      .then((res) => res.json())
+      .then((res) => {
+        setIsBusy(false);
+        return res.json();
+      })
       .then((data) => setTodos(data.data));
   }, []);
 
-  // Cleanup jewel timer on unmount
   useEffect(() => () => { if (jewelTimer.current) clearTimeout(jewelTimer.current); }, []);
 
   const add = async (form: NewTaskForm) => {
@@ -63,11 +65,11 @@ export default function TodoCard() {
       prev.map((t) => (t.id === id ? { ...t, checked: newStatus } : t))
     );
 
-    if (newStatus === 1) {
-      setShowJewel(true);
-      if (jewelTimer.current) clearTimeout(jewelTimer.current);
-      jewelTimer.current = setTimeout(() => setShowJewel(false), 2000);
-    }
+    // if (newStatus === 1) {
+    //   setShowJewel(true);
+    //   if (jewelTimer.current) clearTimeout(jewelTimer.current);
+    //   jewelTimer.current = setTimeout(() => setShowJewel(false), 2000);
+    // }
 
     await fetch("/api/todo", {
       method: "PUT",
@@ -103,7 +105,7 @@ export default function TodoCard() {
         <TaskModal onClose={() => setModalOpen(false)} onAdd={add} />
       )}
 
-      {showJewel && (
+      {/* {showJewel && (
         <div className="fixed left-4 top-4 z-70">
           <Image
             src="/lets-go.gif"
@@ -113,7 +115,7 @@ export default function TodoCard() {
             unoptimized
           />
         </div>
-      )}
+      )} */}
 
       <Card>
         <div className="flex items-center justify-between mb-5!">
@@ -127,7 +129,6 @@ export default function TodoCard() {
           </button>
         </div>
 
-        {/* Loading overlay — now correctly positioned */}
         <div className={`todo-list relative ${isBusy ? "pointer-events-none select-none" : ""}`}>
           {isBusy && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-30 rounded-lg">
