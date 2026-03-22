@@ -9,14 +9,14 @@ import NewsCard from "@/components/cards/news";
 import FlightsCard from "@/components/cards/flights";
 import TodoCard from "@/components/cards/todo";
 import WishlistCard from "@/components/cards/amazonWishlist";
-import HabitTracker from "@/components/cards/habitTracker";
+// import HabitTracker from "@/components/cards/habitTracker";
 
 const DASHBOARD_CARDS = [
   WeatherCard,
   NewsCard,
   FlightsCard,
   StocksCard,
-  HabitTracker,
+  // HabitTracker,
   TodoCard,
   CalendarCard,
   WishlistCard,
@@ -30,6 +30,7 @@ export default function ActiveCards() {
   const isFlightsUpdated = today === 2 || today === 6;
 
   useEffect(() => {
+    reportStatus("habit", "success");
     if (isWeekend) reportStatus("stocks", "success");
     if (!isFlightsUpdated) { reportStatus("flights", "success"); };
   }, [isWeekend, isFlightsUpdated]);
