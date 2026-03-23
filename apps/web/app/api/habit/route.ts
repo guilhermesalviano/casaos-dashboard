@@ -6,7 +6,7 @@ import { ONE_MINUTE_IN_MS } from "@/constants";
 import { StreakResponse } from "@/types/habit";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 
-const habitCache = createMemoryCache<StreakResponse>(ONE_MINUTE_IN_MS * 60 * 3); // 3 hours in seconds
+const habitCache = createMemoryCache<StreakResponse>(ONE_MINUTE_IN_MS * 60 * 3);
 
 export async function GET(req: NextRequest) {
   const cached = habitCache.get();
