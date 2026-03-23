@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Card from "../card";
+import { useEffect, useState } from "react";
 import { useStatus } from "@/contexts/statusContext";
-import { memo } from "react";
+import Card from "../card";
 
 const RAIN_CODES = new Set([51,53,55,56,57,61,63,65,66,67,80,81,82,85,86,95,96,99]);
 
@@ -11,31 +10,24 @@ function isRaining(code: number) {
   return RAIN_CODES.has(code);
 }
 
-const WeatherCard = memo(function WeatherCard() {
+export default function WeatherCard() {
   const [weather, setWeather] = useState<any>();
   const { reportStatus } = useStatus();
 
   useEffect(() => {
-    const fetchWeather = () => {
-      fetch("/api/weather")
-        .then((res) => {
-          if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
-          return res.json();
-        })
-        .then((data) => {
-          setWeather(data.data);
-          reportStatus("weather", "success");
-        })
-        .catch(() => {
-          setWeather({error: "failed"})
-          reportStatus("weather", "error");
-        });
-    };
-
-    fetchWeather();
-    const interval = setInterval(fetchWeather, 1200000); // 1200000 = 20 min = 2 * 10 * 60 * 1000 milisseconds
-
-    return () => clearInterval(interval);
+    fetch("/api/weather")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setWeather(data.data);
+        reportStatus("weather", "success");
+      })
+      .catch(() => {
+        setWeather({error: "failed"})
+        reportStatus("weather", "error");
+      });
   }, []);
 
   if (!weather) {
@@ -70,6 +62,4 @@ const WeatherCard = memo(function WeatherCard() {
       </div>
     </Card>
   )
-});
-
-export default WeatherCard;
+}
