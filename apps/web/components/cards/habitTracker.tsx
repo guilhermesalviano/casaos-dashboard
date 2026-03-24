@@ -3,9 +3,10 @@
 import { useStatus } from "@/contexts/statusContext";
 import { format } from "date-fns";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import storage from "@/lib/storage";
 import Card from "../card";
+import { useDayChange } from "@/hooks/useDayChange";
 
 const HabitTracker = () => {
   const [streakState, setStreakState] = useState(0);
@@ -39,45 +40,39 @@ const HabitTracker = () => {
     storage.set("habitToday", todayStr);
   }
 
-  const fetchHabit = () => {
-    fetch("/api/habit")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        reportStatus("habit", "success");
+  const fetchHabit = useCallback(async () => {
+    const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    console.log("[log]: a new habit fetch.");
 
-        const { streak, lastDayOfWeek } = data.data;
+    try {
+      const res = await fetch("/api/habit");
+      if (!res.ok) throw new Error(`Erro do servidor: ${res.status}`);
 
-        if (todayStr.split("T")[0] !== lastDayOfWeek.split("T")[0]) return;
+      const data = await res.json();
+      const { streak, lastDayOfWeek } = data.data;
 
-        setStreakState(streak);
-        setQuestionToday(true);
+      reportStatus("habit", "success");
+      if (todayStr.split("T")[0] !== lastDayOfWeek.split("T")[0]) return;
 
-        const DAYS_OF_WEEK = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+      setStreakState(streak);
+      setQuestionToday(true);
 
-        if (lastDayOfWeek) {
-          const lastDayOfWeekNumber = new Date(lastDayOfWeek).getUTCDay();
+      if (lastDayOfWeek) {
+        const lastDayOfWeekNumber = new Date(lastDayOfWeek).getUTCDay();
 
-          let weekDaysMapLocal = {};
-          let streakCounter = streak;
-          for (let i = 6; i >= 0; i--) {
-            if (i <= lastDayOfWeekNumber && streakCounter > 0) {
-              weekDaysMapLocal = { ...weekDaysMapLocal, [DAYS_OF_WEEK[i]]: true };
+        const weekDaysMapLocal = Object.fromEntries(
+          DAYS_OF_WEEK.map((day, i) => [
+            day,
+            i <= lastDayOfWeekNumber && i > lastDayOfWeekNumber - streak,
+          ])
+        );
 
-              streakCounter--;
-              continue;
-            }
-            weekDaysMapLocal = { ...weekDaysMapLocal, [DAYS_OF_WEEK[i]]: false };
-          }
-          setWeekDaysMap(weekDaysMapLocal);
-        }
-      })
-      .catch(() => {
-        reportStatus("habit", "error");
-      });
-  };
+        setWeekDaysMap(weekDaysMapLocal);
+      }
+    } catch {
+      reportStatus("habit", "error");
+    }
+  }, [todayStr]);
 
   useEffect(() => {
     const noTodayStored = storage.get("habitNoToday");
@@ -93,7 +88,12 @@ const HabitTracker = () => {
 
     fetchHabit();
   }, []);
-  
+
+  useDayChange((newDay) => {
+    console.log(`Day changed to ${newDay}, fetching habit.`);
+    fetchHabit();
+  });
+
   return (
     <Card className="flex justify-center flex-col items-center">
       {!questionToday ? (
