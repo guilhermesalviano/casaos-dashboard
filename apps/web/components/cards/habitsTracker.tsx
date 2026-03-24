@@ -11,6 +11,7 @@ import {
 } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import Card from "../card";
+import { useDayChange } from "@/hooks/useDayChange";
 
 const HABITS = [
   { id: "wakedup", label: "Wake up early", icon: "🐓" },
@@ -35,6 +36,11 @@ const MultiHabitTracker = () => {
       reportStatus("habit", "error");
     }
   }, []);
+
+  useDayChange((newDay) => {
+    console.log(`Day changed to ${newDay}, fetching habits.`);
+    fetchHabits();
+  });
 
   useEffect(() => {
     fetchHabits();
