@@ -8,12 +8,10 @@ import MultiHabitTracker from "./cards/habitsTracker";
 
 const today = new Date().getDay();
 const isWeekend = today === 0 || today === 6;
-// const isFlightsUpdated = today === 2 || today === 6;
 
 const ALL_CARDS = [
   WeatherCard,
   NewsCard,
-  // !isFlightsUpdated ? null : FlightsCard,
   !isWeekend ? StocksCard : null,
   TodoCard,
   CalendarCard,
@@ -22,7 +20,6 @@ const ALL_CARDS = [
 
 const autoSuccessStatuses = [
   ...(isWeekend ? ["stocks"] : []),
-  // ...(!isFlightsUpdated ? ["flights"] : []),
 ];
 
 export default function ActiveCards() {
