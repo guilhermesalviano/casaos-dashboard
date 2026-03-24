@@ -9,7 +9,7 @@ import { useDayChange } from "@/hooks/useDayChange";
 const EVENT_MAPPING: Record<string, { emoji: string; bg:string; color: string;}> = {
   birthday: { emoji: "🎂", bg: "bg-cyan-50", color: "text-cyan-700" },
   travel: { emoji: "✈️", bg: "bg-orange-50", color: "text-orange-700" },
-  default: { emoji: "📅", bg: "bg-slate-50", color: "text-slate-600" }
+  default: { emoji: "🚩", bg: "bg-slate-50", color: "text-slate-600" }
 };
 
 export default function CalendarCard() {
@@ -42,7 +42,7 @@ export default function CalendarCard() {
   const generateNextEventMessage = (date: string, title: string) => {
     const eventDate = parse(date, "dd/MM/yyyy", new Date());
 
-    if (isNaN(eventDate.getTime())) return `Próximo evento: ${title}`;
+    if (isNaN(eventDate.getTime())) return `Próximo evento: ${title} em ${date}`;
 
     const today = startOfDay(new Date());
     const days = differenceInDays(startOfDay(eventDate), today);
@@ -60,7 +60,7 @@ export default function CalendarCard() {
       <h2 className="section-title mb-0!">📅 Calendário</h2>
       {calendar?.importantEvents.map((ev: any) => (
         <div key={ev.id} className={`flex items-center gap-2 text-[0.7rem] my-2! px-2! py-1! rounded-md font-medium animate-appear ${EVENT_MAPPING[ev.type].bg} ${EVENT_MAPPING[ev.type].color}`}>
-          <span className="animate-bounce">
+          <span className={`${ev.type === "birthday" ? "animate-bounce" : ""}`}>
             { EVENT_MAPPING[ev.type].emoji }
           </span>
           <span>

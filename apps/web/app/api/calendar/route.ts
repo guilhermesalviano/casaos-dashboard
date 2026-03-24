@@ -18,16 +18,15 @@ export async function GET(req: NextRequest) {
     const events = await fetchGoogleCalendarAPI();
 
     const importantEvents = events
-      .filter((event) => /birthday|anivers[áa]rio/i.test(event.summary))
       .filter((event) => event.start.date !== format(new Date(), "dd/MM/yyyy"))
       .map((event) => {
         return {
           id: event.id,
-          start: event.start.dateTime ? format(parseISO(event.start.dateTime), "HH:mm") : event.start.date 
+          start: event.start.dateTime ? format(parseISO(event.start.dateTime), "dd/MM - HH:mm") : event.start.date 
             ? format(parseISO(event.start.date), "dd/MM/yyyy") : "Horário não definido",
           end: (event.end.dateTime ? format(event.end.dateTime, "HH:mm") : ""),
           title: event.summary,
-          type: "birthday"
+          type: (/birthday|anivers[áa]rio/i.test(event.summary)? "birthday": "default")
         }
       });
 
@@ -47,7 +46,7 @@ export async function GET(req: NextRequest) {
           end: (event.end.dateTime ? format(event.end.dateTime, "HH:mm") : ""),
           title: event.summary,
           color: "#6EE7B7",
-          type: /birthday|anivers[áa]rio/i.test(event.summary) ? "birthday" : "event"
+          type: /birthday|anivers[áa]rio/i.test(event.summary) ? "birthday" : "default"
         }
       });
 
