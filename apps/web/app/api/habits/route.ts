@@ -92,11 +92,13 @@ async function getHabitStreak(habitName: string, repository: Repository<HabitTra
 
   if (diffInDays > 1) return { streak: 0, dates: null, lastDay: null };
 
-  const dates = history.map((record) => {
-    if (today.getMonth() === new Date(record.createdAt).getMonth()) {
-      return new Date(record.createdAt);
-    }
-  });
+  const dates = history
+    .filter((record) => {
+      const recordDate = new Date(record.createdAt);
+      return today.getMonth() === recordDate.getMonth() && 
+            today.getFullYear() === recordDate.getFullYear();
+    })
+  .map((record) => new Date(record.createdAt));
 
   for (const record of history) {
     const currentDate = new Date(record.createdAt);
@@ -118,7 +120,7 @@ async function getHabitStreak(habitName: string, repository: Repository<HabitTra
 
   return {
     streak,
-    dates,
+    dates: dates.length > 0 ? dates : null,
     lastDay: firstDateInDb
   };
 }
