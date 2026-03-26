@@ -9,6 +9,9 @@ function api(prod: string, path: string): string {
 }
 
 function required(key: string): string {
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    return process.env[key] ?? "";
+  }
   const val = process.env[key];
   if (!val) throw new Error(`Missing required environment variable: ${key}`);
   return val;
