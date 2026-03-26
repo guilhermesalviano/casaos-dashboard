@@ -97,21 +97,9 @@ body {
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  padding-left: 20px;
-  padding-right: 8px;
-  gap: 14px;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
   background: var(--background);
-  backdrop-filter: blur(10px);
-  z-index: 60;
+  backdrop-filter: blur(10px); 
 }
 .header-brand {
   font-family: var(--font-mono);

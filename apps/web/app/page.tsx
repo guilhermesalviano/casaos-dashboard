@@ -10,12 +10,16 @@ export default function Page() {
     <>
       <Loading />
       <div>
-        <div className="header">
+        <div className="header grid grid-cols-3 items-center w-full py-4! sm:px-14! sticky z-60">
           <div className="header-brand flex gap-2 items-center">
             <Logo />
           </div>
-          <div className="header-clock"><Clock /></div>
-          <div className="header-status gap-4">
+
+          <div className="header-clock flex justify-center">
+            <Clock />
+          </div>
+
+          <div className="header-status flex items-center justify-end gap-4">
             <SystemsStatus />
             <ThemeToggle />
           </div>
