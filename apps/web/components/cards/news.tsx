@@ -7,7 +7,7 @@ import Card from "../card";
 
 const NewsCard = () => {
   const { news } = useDashboard();
-  const [blurred, setBlurred] = useState(false);
+  const [blurred, setBlurred] = useState(true);
 
   if (!news.data?.length) return null;
 
