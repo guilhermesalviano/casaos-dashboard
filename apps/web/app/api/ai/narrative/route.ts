@@ -8,7 +8,7 @@ const narrativeCache = createMemoryCache<string>(ONE_MINUTE_IN_MS * 60 * 1);
 export async function POST(req: NextRequest) {
     const cached = narrativeCache.get();
     if (cached) {
-        return NextResponse.json({ message: "Narrative data from cache successfully", text: cached });
+        return NextResponse.json({ message: "Narrative data from cache successfully", data: cached });
     }
 
     try {
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
         narrativeCache.set(fullText)
 
-        return NextResponse.json({ message: "Narrative data retrieved successfully", text: fullText });
+        return NextResponse.json({ message: "Narrative data retrieved successfully", data: fullText });
     } catch (error) {
         console.error("Weather Narrative API error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

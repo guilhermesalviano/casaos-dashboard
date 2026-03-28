@@ -246,7 +246,7 @@ const AINarrative: React.FC<AINarrativeProps> = ({ weather, hour }) => {
       if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
-      const narrative = data.text || "";
+      const narrative = data.data || "";
 
       setText(narrative);
       setState("done");
