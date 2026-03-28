@@ -87,10 +87,9 @@ async function getHabitStreak(habitName: string, repository: Repository<HabitTra
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const diffInMs = today.getTime() - lastDate.getTime();
-  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-  if (diffInDays > 1) return { streak: 0, dates: null, lastDay: null };
+  // const diffInMs = today.getTime() - lastDate.getTime();
+  // const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+  // if (diffInDays > 1) return { streak: 0, dates: null, lastDay: null };
 
   const dates = history
     .filter((record) => {

@@ -9,6 +9,9 @@ export class TodoCheck {
   @PrimaryColumn()
   timestamp!: string;
 
+  @Column()
+  hour!: string;
+
   @Column({ type: "tinyint", width: 1, default: 0 })
   checked!: number;
 

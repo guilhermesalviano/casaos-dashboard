@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabaseConnection } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { In, Like } from "typeorm";
 import { Todo } from "@/entities/Todo";
 import { TodoRecurrence } from "@/entities/TodoRecurrence";
@@ -69,14 +69,27 @@ export async function GET(req: NextRequest) {
       relations: ["todo"]
     });
 
+    // refactor this to fetch all checks in one query
+    const checksHistory = await todoCheckRepository.find({
+      where: [
+        {
+          todo: In(sortedTodos.map(todo => todo.id)),
+          timestamp: Like(`${format(subDays(today, 1), "yyyy-MM-dd")}%`)
+        }
+      ],
+      relations: ["todo"]
+    });
+
     const todosMapped = sortedTodos.map((todo) => {
       const check = checksResult.find(check => check.todo?.id === todo.id);
+      const checkHistory = checksHistory.find(check => check.todo?.id === todo.id);
 
       return {
         id: todo.id,
         title: todo.title,
         checked: check?.checked ?? 0,
-        priority: todo.priority
+        priority: todo.priority,
+        usualCompletionTime: checkHistory?.hour ?? '' // data for AI.
       }
     });
 
@@ -116,6 +129,7 @@ export async function POST(req: NextRequest) {
     const todoCheck = {
       id: uuidv4(),
       timestamp: format(new Date(), "yyyy-MM-dd"),
+      hour: format(new Date(), "HH:mm"),
       checked,
       todo: todoSaved
     }
@@ -156,11 +170,12 @@ export async function PUT(req: NextRequest) {
     });
 
     if (isChecked) {
-      await todoCheckRepository.update({ id: isChecked.id }, { checked });
+      await todoCheckRepository.update({ id: isChecked.id }, { checked, hour: format(new Date(), "HH:mm") });
     } else {
       await todoCheckRepository.save({
         id: uuidv4(),
         timestamp: format(new Date(), "yyyy-MM-dd"),
+        hour: format(new Date(), "HH:mm"),
         checked,
         todo: todo
       });
