@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
                             hour < 20 ? "evening" : "night";
 
         // Temporary integration, i will refactor this later
-        const news = await fetch(`${CONFIG.baseUrl}/api/news`);
-        const newsData = await news.json();
+        // const news = await fetch(`${CONFIG.baseUrl}/api/news`);
+        // const newsData = await news.json();
 
         const todo = await fetch(`${CONFIG.baseUrl}/api/todo`);
         const todoData = await todo.json();
@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
         Evite clichês e seja direto.
         Dados:
         Clima: ${weather.temp}°C, ${weather.condition} (${timeOfDay});
-        Mundo: ${newsData.data.map((n: any) => n.title).join(", ")};
         Agenda: ${calendarData.data.todayEvents.map((c: any) => c.title).join(", ")};
         Tarefas: ${todoData.data.map((t: any) => t.title).join(", ")}`;
 
