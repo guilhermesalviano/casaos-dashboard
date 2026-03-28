@@ -4,6 +4,7 @@ import SystemsStatus from "@/components/systemsStatus";
 import ThemeToggle from "@/components/themeToggle";
 import ActiveCards from "@/components/activeCards";
 import Logo from "@/components/logo";
+import NotificationButton from "@/components/notifications";
 
 export default function Page() {
   return (
@@ -22,6 +23,7 @@ export default function Page() {
           <div className="header-status flex items-center justify-end gap-4">
             <SystemsStatus />
             <ThemeToggle />
+            <NotificationButton />
           </div>
         </div>
         <ActiveCards />

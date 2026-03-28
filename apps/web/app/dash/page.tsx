@@ -10,6 +10,7 @@ import {
   CloudLightning,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useDashboard } from "@/hooks/useDashboard";
 
 interface RainDrop {
   x: number;
@@ -227,10 +228,14 @@ const widgets = [
   { icon: <Eye size={13} className="text-white/40" />, label: "Visibility", value: "6 km" },
 ];
 
+const RAIN_CODES = new Set([51,53,55,56,57,61,63,65,66,67,80,81,82,85,86,95,96,99]);
+const isRaining = (code: number) => RAIN_CODES.has(code);
+
 export default function IdleDashboard() {
   const clock = useClock();
-  const [isRaining, setIsRaining] = useState(false);
   const router = useRouter();
+  const { weather } = useDashboard();
+  const [isThundering, setIsThundering] = useState(false);
 
   const background = getDayNightBackground(clock.hour);
   const atmosphericOverlay = getAtmosphericOverlay(clock.hour);
@@ -239,6 +244,11 @@ export default function IdleDashboard() {
   const handleClick = useCallback(() => {
     router.push("/");
   }, [router]);
+
+  if (weather.status === "idle" || weather.status === "loading" || weather.status === "error" || !weather.data) return;
+
+  const w = weather.data;
+  const raining = isRaining(w.code);
 
   return (
     <div
@@ -257,11 +267,11 @@ export default function IdleDashboard() {
       />
 
       {/* Rain + lightning */}
-      {isRaining && (
-        <>
-          <RainCanvas />
-          <LightningFlash />
-        </>
+      {raining && (
+        <RainCanvas />
+      )}
+      {isThundering && (
+        <LightningFlash />
       )}
 
       <div className="relative h-screen z-10 flex justify-center items-center gap-10 p-6!">
@@ -282,21 +292,22 @@ export default function IdleDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-white/40">
               <MapPin size={12} />
-              <span className="text-xs">Anápolis, GO</span>
+              <span className="text-xs">{w.city}, {w.state}</span>
             </div>
             <Label>Live weather</Label>
           </div>
 
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-6xl font-light text-white" style={{ letterSpacing: "-3px", fontFamily: "'DM Mono', monospace" }}>35°</div>
-              <div className="text-white/50 text-sm mt-1!">Mostly Clear</div>
+              <div className="text-6xl font-light text-white" style={{ letterSpacing: "-3px", fontFamily: "'DM Mono', monospace" }}>{w.temp}°</div>
+              <div className="text-white/50 text-sm mt-1!">{w.condition}</div>
               <div className="flex items-center gap-1 mt-1!">
                 <CloudLightning size={13} className="text-yellow-400" />
                 <span className="text-white/30 text-xs">Storm approaching</span>
               </div>
             </div>
 
+            {/* Cloudy */}
             <div className="relative w-20 h-20 shrink-0">
               <svg viewBox="0 0 80 80" className="w-full h-full">
                 <ellipse cx="44" cy="48" rx="24" ry="13" fill="#7a9bb5" opacity="0.8"/>
