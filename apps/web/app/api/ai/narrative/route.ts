@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
         const calendarSummary = calendar.data?.todayEvents.map((c: any) => c.title + " at " + c.start).join(", ");
 
-        const HABIT_PROMPT_HELPER = `- (wakedup=wake early; date different from ${today}=not done today)`;
+        const HABIT_PROMPT_HELPER = `- (wakedup=wake early; date different from ${today.split(",")[0]} = not done today)`;
         const entries = Object.entries(habits.completions) as [string, any][];
         const habitsSummary = entries.length > 0
             ? `${entries[0][0]}: ${entries[0][1].join(", ")} ${HABIT_PROMPT_HELPER}`
