@@ -351,7 +351,18 @@ export default function IdleDashboard() {
     router.push("/");
   }, [router]);
 
-  if (weather.status === "idle" || weather.status === "loading" || weather.status === "error" || !weather.data) return null;
+  if (!weather.data || (weather.status === "idle" || weather.status === "loading" || weather.status === "error")) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: getDayNightBackground(clock.hour) }}>
+        <button
+          onClick={() => router.refresh()}
+          className="text-white/30 text-sm hover:text-white/60 transition-colors"
+        >
+          ↺ reconnect
+        </button>
+      </div>
+    );
+  }
 
   const w = weather.data;
   const raining = isRaining(w.code);
