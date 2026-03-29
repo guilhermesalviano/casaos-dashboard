@@ -81,7 +81,7 @@ export default function AiAnalysis() {
       {raining && <RainCanvas />}
       {isThundering && <LightningFlash />}
 
-      <div className="relative h-screen z-10 flex justify-center items-center gap-10 p-6!">
+      <div className="relative h-screen z-10 flex justify-center items-center gap-10 p-6! max-sm:flex-col">
 
         {/* Clock */}
         <div className="flex flex-col justify-center gap-2 pl-2">
@@ -97,7 +97,7 @@ export default function AiAnalysis() {
         </div>
 
         {/* Weather panel */}
-        <Panel className="p-6! flex flex-col gap-4! min-w-sm">
+        <Panel className="p-6! flex flex-col gap-4! min-w-sm max-sm:min-w-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-white/40">
               <MapPin size={12} />
