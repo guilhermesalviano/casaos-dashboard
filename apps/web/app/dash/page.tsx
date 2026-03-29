@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import {
-  Droplets,
-  Wind,
-  Eye,
-  MapPin,
-  CloudRain,
-  CloudLightning,
-} from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDashboard } from "@/hooks/useDashboard";
 
@@ -210,15 +203,15 @@ const AINarrative: React.FC<AINarrativeProps> = ({ weather, hour }) => {
   const [text, setText] = useState("");
   const [state, setState] = useState<NarrativeState>("idle");
   const abortRef = useRef<AbortController | null>(null);
-  const cacheKey = `${weather.city}-${weather.code}-${weather.temp}-${Math.floor(hour / 3)}`;
-  const cacheRef = useRef<Record<string, string>>({});
+  // const cacheKey = `${weather.city}-${weather.code}-${weather.temp}-${Math.floor(hour / 3)}`;
+  // const cacheRef = useRef<Record<string, string>>({});
 
   const fetchNarrative = useCallback(async () => {
-    if (cacheRef.current[cacheKey]) {
-      setText(cacheRef.current[cacheKey]);
-      setState("done");
-      return;
-    }
+    // if (cacheRef.current[cacheKey]) {
+    //   setText(cacheRef.current[cacheKey]);
+    //   setState("done");
+    //   return;
+    // }
 
     abortRef.current?.abort();
     abortRef.current = new AbortController();
@@ -249,27 +242,24 @@ const AINarrative: React.FC<AINarrativeProps> = ({ weather, hour }) => {
 
       setText(narrative);
       setState("done");
-      cacheRef.current[cacheKey] = narrative;
+      // cacheRef.current[cacheKey] = narrative;
     } catch (err: any) {
       if (err.name !== "AbortError") {
         setState("error");
       }
     }
-  }, [cacheKey, weather, hour]);
+  }, [weather, hour]);
 
   useEffect(() => {
     fetchNarrative();
     return () => abortRef.current?.abort();
-  }, [fetchNarrative]);
+  }, []);
 
   return (
     <div
       className="rounded-xl p-3! flex flex-col gap-2 max-w-sm"
       style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.07)" }}
     >
-      
-
-      {/* Content */}
       <div className="min-h-[2.8rem] flex items-start">
         {state === "loading" && (
           <div className="flex items-center gap-2">
@@ -291,7 +281,6 @@ const AINarrative: React.FC<AINarrativeProps> = ({ weather, hour }) => {
 
         {(state === "done") && text && (
           <div className="flex flex-col">
-            {/* Header row */}
             <div>
               <span className="text-[10px] font-semibold tracking-[0.12em] text-white/30 uppercase">
                 Rocky says:
@@ -377,19 +366,16 @@ export default function IdleDashboard() {
       }}
       onClick={handleClick}
     >
-      {/* Atmospheric vignette */}
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{ background: atmosphericOverlay, transition: "background 2s ease" }}
       />
 
-      {/* Rain + lightning */}
       {raining && <RainCanvas />}
       {isThundering && <LightningFlash />}
 
       <div className="relative h-screen z-10 flex justify-center items-center gap-10 p-6!">
 
-        {/* Clock */}
         <div className="flex flex-col justify-center gap-2 pl-2">
           <div
             className="font-light text-white leading-none"
@@ -402,7 +388,6 @@ export default function IdleDashboard() {
           </div>
         </div>
 
-        {/* Weather panel */}
         <Panel className="p-6! flex flex-col gap-4! min-w-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-white/40">

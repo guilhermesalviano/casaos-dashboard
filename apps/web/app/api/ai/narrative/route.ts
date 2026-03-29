@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
         const isMorning = hour > 5 && hour < 10;
         const prompt = 'Always reply in Portuguese.' +
             `[ROCKY AI ASSISTANT - ${today} - ${userLocation.city}, ${userLocation.state}]` +
-            'This data is from our personal computer. You are reading it and helping us keep it organized.'+
+            'This data is from our personal computer. You are reading it and helping us keep it organized you do not need to mention this in the response.'+
             `Environment: ${weather.temp}°C, ${weather.condition}, ${timeOfDay};` +
             `Calendar: ${calendarSummary || "No events today"};` +
             `To-Do List(${todo.data.filter((t: any) => t.checked === 0).length} pending tasks): ${todoSummary || "No pending tasks today"};` +
