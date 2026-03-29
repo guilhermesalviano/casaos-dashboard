@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import Clock from "@/components/clock";
 import SystemsStatus from "@/components/systemsStatus";
@@ -9,17 +7,9 @@ import ThemeToggle from "@/components/themeToggle";
 import ActiveCards from "@/components/activeCards";
 import Logo from "@/components/logo";
 import NotificationButton from "@/components/notifications";
+import TalkToAI from "@/components/talkToAI";
 
 export default function Page() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/dash");
-    }, 60000);
-
-    return () => clearTimeout(timer);
-  }, [router]);
 
   return (
     <>
@@ -37,6 +27,7 @@ export default function Page() {
           <div className="header-status flex items-center justify-end gap-4">
             <SystemsStatus />
             <ThemeToggle />
+            <TalkToAI />
             <NotificationButton />
           </div>
         </div>

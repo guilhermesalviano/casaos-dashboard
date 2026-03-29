@@ -1,7 +1,6 @@
 import WeatherCard from "@/components/cards/weather";
 import CalendarCard from "@/components/cards/calendar";
 import StocksCard from "@/components/cards/stocks";
-import NewsCard from "@/components/cards/news";
 import TodoCard from "@/components/cards/todo";
 import StatusReporter from "./statusReporter";
 import MultiHabitTracker from "./cards/habitsTracker";
@@ -13,11 +12,10 @@ const stocksCard = !isWeekend ? StocksCard : null;
 
 const ALL_CARDS = [
   WeatherCard,
-  NewsCard,
+  MultiHabitTracker,
   stocksCard,
   TodoCard,
   CalendarCard,
-  MultiHabitTracker,
 ].filter(Boolean) as React.ComponentType[];
 
 const autoSuccessStatuses = [
