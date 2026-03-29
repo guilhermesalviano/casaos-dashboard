@@ -1,5 +1,3 @@
-"use client";
-
 import Loading from "@/components/loading";
 import Clock from "@/components/clock";
 import SystemsStatus from "@/components/systemsStatus";
@@ -8,6 +6,7 @@ import ActiveCards from "@/components/activeCards";
 import Logo from "@/components/logo";
 import NotificationButton from "@/components/notifications";
 import TalkToAI from "@/components/talkToAI";
+import { CONFIG } from "@/config/config";
 
 export default function Page() {
 
@@ -26,12 +25,12 @@ export default function Page() {
 
           <div className="header-status flex items-center justify-end gap-4">
             <SystemsStatus />
-            <ThemeToggle />
             <TalkToAI />
-            <NotificationButton />
+            {CONFIG.isDev && <NotificationButton />}
           </div>
         </div>
         <ActiveCards />
+        <ThemeToggle />
       </div>
     </>
   );

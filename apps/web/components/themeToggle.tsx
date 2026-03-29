@@ -36,27 +36,29 @@ export default function ThemeToggle() {
   const isDark = mode === "dark";
 
   return (
-    <button
-      onClick={toggle}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      style={{
-        background: "none",
-        border: "1px solid var(--border)",
-        borderRadius: "50%",
-        width: 34,
-        height: 34,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        transition: "border-color 0.2s, opacity 0.2s",
-        flexShrink: 0,
-      }}
-      onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-hover)")}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
-    >
-      {isDark ? <MoonIcon /> : <SunIcon />}
-    </button>
+    <div className="fixed bottom-4 right-4">
+      <button
+        onClick={toggle}
+        aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+        style={{
+          background: "var(--background)",
+          border: "1px solid var(--border)",
+          borderRadius: "50%",
+          width: 34,
+          height: 34,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "border-color 0.2s, opacity 0.2s",
+          flexShrink: 0,
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-hover)")}
+        onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+      >
+        {isDark ? <MoonIcon /> : <SunIcon />}
+      </button>
+    </div>
   );
 }
 
