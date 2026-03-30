@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
 
     const wakeupStreak = await getHabitStreak("wakedup", repository);
     const gymStreak = await getHabitStreak("gym", repository);
+    const studyStreak = await getHabitStreak("study", repository);
 
     const completions: Record<string, string[]> = {};
 
@@ -40,6 +41,7 @@ export async function GET(req: NextRequest) {
 
     processHabit("wakedup", wakeupStreak.dates);
     processHabit("gym", gymStreak.dates);
+    processHabit("study", studyStreak.dates);
 
     habitCache.set("default", completions);
 

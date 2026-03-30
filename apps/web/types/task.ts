@@ -13,8 +13,8 @@ export interface NewTaskForm {
   recurrence: {
     repeat: boolean;
     weeklyInterval: number;
-    weeklyDays: number[];
-    weeklyEnd: number | null;
+    weeklyDays?: number[] | null;
+    weeklyEnd?: number | null;
   };
 }
 
