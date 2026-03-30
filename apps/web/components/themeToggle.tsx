@@ -1,6 +1,8 @@
 "use client";
 
+import storage from "@/lib/storage";
 import { useState, useEffect } from "react";
+import Button from "./button";
 
 type ThemeMode = "light" | "dark" | "system";
 
@@ -8,14 +10,14 @@ const STORAGE_KEY = "theme";
 
 function getInitialTheme(): ThemeMode {
   if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
+  const stored = storage.get(STORAGE_KEY) as ThemeMode | null;
   if (stored === "light" || stored === "dark") return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function applyTheme(mode: ThemeMode) {
   document.documentElement.setAttribute("data-theme", mode);
-  localStorage.setItem(STORAGE_KEY, mode);
+  storage.set(STORAGE_KEY, mode);
 }
 
 export default function ThemeToggle() {
@@ -37,27 +39,12 @@ export default function ThemeToggle() {
 
   return (
     <div className="fixed bottom-4 right-4">
-      <button
+      <Button
         onClick={toggle}
-        aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-        style={{
-          background: "var(--background)",
-          border: "1px solid var(--border)",
-          borderRadius: "50%",
-          width: 40,
-          height: 40,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "border-color 0.2s, opacity 0.2s",
-          flexShrink: 0,
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+        ariaLabel={`Switch to ${isDark ? "light" : "dark"} mode`}
       >
         {isDark ? <MoonIcon /> : <SunIcon />}
-      </button>
+      </Button>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { useDayChange } from "@/hooks/useDayChange";
 const HABITS = [
   { id: "wakedup", label: "Wake up early", icon: "🐓" },
   { id: "gym", label: "Exercise", icon: "💪" },
+  { id: "study", label: "Study", icon: "📚" },
 ];
 
 const MultiHabitTracker = () => {
@@ -91,14 +92,14 @@ const MultiHabitTracker = () => {
       </div>
 
       {view === "day" ? (
-        <div className="space-y-4!">
+        <div className="space-y-2!">
           {HABITS.map((habit) => {
             const isDone = completedDates[todayStr]?.includes(habit.id);
             return (
               <div 
                 key={habit.id}
                 onClick={() => toggleHabit(habit.id)}
-                className={`flex items-center justify-between p-4! rounded-xl border-2 cursor-pointer transition-all ${
+                className={`flex items-center justify-between rounded-xl p-2! border-2 cursor-pointer ${
                   isDone ? "border-orange-500 bg-orange-50" : "border-gray-100 hover:border-orange-200"
                 }`}
               >
@@ -122,9 +123,9 @@ const MultiHabitTracker = () => {
           })}
         </div>
       ) : (
-        <div className="space-y-4! flex">
+        <div className="flex flex-wrap gap-6">
           {HABITS.map(habit => (
-            <div key={habit.id} className="flex gap-2 w-full">
+            <div key={habit.id} className="flex gap-2">
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-semibold text-gray-600">{habit.label}</p>
                 <div className="grid grid-cols-7 gap-1 pt-1!">

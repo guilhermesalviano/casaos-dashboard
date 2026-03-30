@@ -1,34 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Button from "./button";
 
 export default function TalkToAI() {
   const router = useRouter();
 
   return (
     <>
-      <button
+      <Button
         onClick={() => router.push("/ai")}
-        aria-label="Open AI assistant"
-        style={{
-          // backgroundHover: "var(--border)",
-          border: "1px solid var(--border)",
-          borderRadius: "50%",
-          width: 40,
-          height: 40,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "border-color 0.2s, background 0.2s",
-          flexShrink: 0,
-          position: "relative",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+        ariaLabel="Open AI assistant"
       >
         <SparkleIcon />
-      </button>
+      </Button>
     </>
   );
 }

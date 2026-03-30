@@ -4,7 +4,6 @@ export default function Logo() {
   return (
     <>
       <div className="relative shrink-0">
-        {/* ⬡ */}
         <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-md" />
         <Image
           src="/icon.png" 

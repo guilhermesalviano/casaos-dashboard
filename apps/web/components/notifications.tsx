@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Button from "./button";
 
 type Notification = {
   id: string;
@@ -67,7 +68,6 @@ export default function NotificationButton() {
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -88,30 +88,9 @@ export default function NotificationButton() {
 
   return (
     <div ref={ref} style={{ position: "relative", flexShrink: 0 }}>
-      {/* Bell button — mirrors ThemeToggle exactly */}
-      <button
+      <Button
         onClick={() => setOpen((o) => !o)}
-        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
-        style={{
-          background: "none",
-          border: "1px solid var(--border)",
-          borderRadius: "50%",
-          width: 40,
-          height: 40,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "border-color 0.2s, opacity 0.2s",
-          flexShrink: 0,
-          position: "relative",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.borderColor = "var(--border-hover)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.borderColor = "var(--border)")
-        }
+        ariaLabel={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
       >
         <BellIcon />
         {unreadCount > 0 && (
@@ -128,9 +107,8 @@ export default function NotificationButton() {
             }}
           />
         )}
-      </button>
+      </Button>
 
-      {/* Dropdown */}
       {open && (
         <div
           style={{
@@ -239,7 +217,6 @@ export default function NotificationButton() {
                   : "var(--surface-subtle, rgba(0,0,0,0.02))")
                 }
               >
-                {/* Type dot */}
                 <div
                   style={{
                     marginTop: 4,
@@ -301,7 +278,6 @@ export default function NotificationButton() {
             ))}
           </div>
 
-          {/* Footer */}
           <div style={{ padding: "9px 14px" }}>
             <button
               style={{
