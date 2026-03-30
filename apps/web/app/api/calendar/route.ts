@@ -8,7 +8,7 @@ import { CalendarInternalAPIResponse } from "@/types/calendar";
 const calendarCache = createMemoryCache<CalendarInternalAPIResponse>(ONE_MINUTE_IN_MS * 60 * 3);
 
 export async function GET(req: NextRequest) {
-  const cached = calendarCache.get();
+  const cached = calendarCache.get("default");
   if (cached) {
     return NextResponse.json({ message: "Calendar data from cache successfully", data: cached });
   }
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       importantEvents 
     };
 
-    calendarCache.set(responseBody)
+    calendarCache.set("default", responseBody)
 
     return NextResponse.json({ message: "Calendar data retrieved successfully", data: responseBody } );
   } catch (error: unknown) {

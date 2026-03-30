@@ -9,7 +9,7 @@ import { createMemoryCache } from "@/utils/in-memory-cache";
 const habitCache = createMemoryCache<StreakResponse>(ONE_MINUTE_IN_MS * 60 * 3);
 
 export async function GET(req: NextRequest) {
-  const cached = habitCache.get();
+  const cached = habitCache.get("default");
   if (cached) {
     return NextResponse.json({ message: "Habit data from cache successfully", data: cached });
   }
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       lastDayOfWeek
     }
 
-    habitCache.set(streakMap);
+    habitCache.set("default", streakMap);
 
     return NextResponse.json({ message: "Habit retrieve successfully", data: streakMap });
   } catch (error: unknown) {

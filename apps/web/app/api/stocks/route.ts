@@ -28,7 +28,7 @@ const stocksCache = createMemoryCache<StockInternalAPIResponse[]>(ONE_MINUTE_IN_
 
 export async function GET(req: NextRequest) {
   try {
-    const cached = stocksCache.get();
+    const cached = stocksCache.get("default");
     if (cached) {
       return NextResponse.json({ message: "Stocks data from cache successfully", data: cached });
     }
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     const brapiData = await fetchBrapiAPI(symbols.join(","));
     if (brapiData?.results?.length) {
       const data = mapStocks(brapiData.results);
-      stocksCache.set(data);
+      stocksCache.set("default", data);
 
       return NextResponse.json({
         message: "Stocks data retrieved successfully",
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
     const yahooData = await fetchYahooPrice(yahooSymbols);
     if (yahooData?.results?.length) {
       const data = mapStocks(yahooData.results as StockResult[]);
-      stocksCache.set(data);
+      stocksCache.set("default", data);
 
       return NextResponse.json({
         message: "Stocks data retrieved successfully",

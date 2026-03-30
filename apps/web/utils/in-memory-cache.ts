@@ -7,25 +7,26 @@ import { gunzipSync, gzipSync } from "zlib";
  * @param ttlMs time in milliseconds
  * @returns T
  */
-export function createMemoryCache<T>(ttlMs: number) {
-  let cache: { data: Buffer; expiresAt: number } | null = null;
+export function createMemoryCache<T>(ttl: number) {
+  const store = new Map<string, { data: T; expiresAt: number }>();
 
   return {
-    get(): T | null {
-      if (!cache || Date.now() > cache.expiresAt) {
-        cache = null;
+    get(key: string): T | null {
+      const entry = store.get(key);
+      if (!entry || Date.now() > entry.expiresAt) {
+        store.delete(key);
         return null;
       }
-      return JSON.parse(gunzipSync(cache.data).toString());
+      return entry.data;
     },
-    set(data: T): void {
-      cache = {
-        data: gzipSync(Buffer.from(JSON.stringify(data))),
-        expiresAt: Date.now() + ttlMs,
-      };
+    set(key: string, data: T) {
+      store.set(key, { data, expiresAt: Date.now() + ttl });
     },
-    clear(): void {
-      cache = null;
+    delete(key: string) {
+      store.delete(key);
+    },
+    clear() {
+      store.clear();
     },
   };
 }

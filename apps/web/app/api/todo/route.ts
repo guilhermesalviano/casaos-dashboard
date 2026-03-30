@@ -19,7 +19,7 @@ const PRIORITYWEIGHT: Record<string, number> = {
 const todoCache = createMemoryCache<TodoInternalAPIResponse[]>(ONE_MINUTE_IN_MS * 60 * 1);
 
 export async function GET(req: NextRequest) {
-  const cached = todoCache.get();
+  const cached = todoCache.get("default");
   if (cached) {
     return NextResponse.json({ message: "Todos data retrieved from cache", data: cached });
   }
@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
       }
     });
 
-    todoCache.set(todosMapped);
+    todoCache.set("default", todosMapped);
 
     return NextResponse.json({ message: "Todos data retrieved successfully", data: todosMapped });
   } catch (error: unknown) {

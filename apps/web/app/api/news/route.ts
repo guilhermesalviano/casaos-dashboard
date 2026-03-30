@@ -18,7 +18,7 @@ const newsCache = createMemoryCache<NewsReturn[]>(ONE_MINUTE_IN_MS * 30);
 
 export async function GET(req: NextRequest) {
   try {
-    const cached = newsCache.get();
+    const cached = newsCache.get("default");
     if (cached) {
       return NextResponse.json({ message: "News data from cache successfully", data: cached });
     }
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
           };
         }).slice(0, 4);
 
-      newsCache.set(news);
+      newsCache.set("default", news);
 
       return NextResponse.json({ message: "News data retrieved successfully from serpapi", data: news });
     }
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       url: article.url,
     }));
 
-    newsCache.set(news);
+    newsCache.set("default", news);
 
     return NextResponse.json({ message: "News data retrieved successfully from mediastack", data: news });
   } catch (error: unknown) {

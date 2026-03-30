@@ -21,7 +21,7 @@ const wishlistCache = createMemoryCache<WishlistInternalAPIResponse[]>(secondsTo
 
 export async function GET(req: NextRequest) {
   try {
-    const cached = wishlistCache.get();
+    const cached = wishlistCache.get("default");
     if (cached) {
       return NextResponse.json({ message: "Wishlist data from cache successfully", data: cached });
     }
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
       alert: true,
     }));
 
-    wishlistCache.set(wishlistData);
+    wishlistCache.set("default", wishlistData);
 
     return NextResponse.json({ message: "Products data retrieved successfully", data: wishlistData }, { status: 200 })
   } catch (error: unknown) {

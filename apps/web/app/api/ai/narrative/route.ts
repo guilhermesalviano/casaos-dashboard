@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
             ? `${entries[0][0]}: ${entries[0][1].join(", ")} ${HABIT_PROMPT_HELPER}`
             : "No missions recorded.";
 
-        const cached = narrativeCache.get();
+        const cached = narrativeCache.get("default");
         if (cached && cached.split("|")[0] === todoSummary + calendarSummary + habitsSummary) {
             console.log("[cache] Using cached narrative");
             return NextResponse.json({ message: "Narrative data from cache successfully", data: cached.split("|")[1] });
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
         const response = result.response;
         const fullText = response.text();
 
-        narrativeCache.set(todoSummary + calendarSummary + habitsSummary + "|" + fullText)
+        narrativeCache.set("default", todoSummary + calendarSummary + habitsSummary + "|" + fullText)
 
         return NextResponse.json({ message: "Narrative data retrieved successfully", data: fullText });
     } catch (error) {

@@ -2,14 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDatabaseConnection } from "@/lib/db";
 import { HabitTracker } from "@/entities/HabitTracker";
 import { ONE_MINUTE_IN_MS } from "@/constants";
-import { StreakResponse } from "@/types/habit";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { Repository } from "typeorm";
 
-const habitCache = createMemoryCache<StreakResponse>(ONE_MINUTE_IN_MS * 60 * 3);
+const habitCache = createMemoryCache<Record<string, string[]>>(ONE_MINUTE_IN_MS * 60 * 3);
 
 export async function GET(req: NextRequest) {
   try {
+    const cached = habitCache.get("default");
+    if (cached) {
+      return NextResponse.json({ message: "Habits data from cache successfully", data: cached });
+    }
+
     const db = await getDatabaseConnection();
     const repository = db.getRepository(HabitTracker);
 
@@ -36,6 +40,8 @@ export async function GET(req: NextRequest) {
 
     processHabit("wakedup", wakeupStreak.dates);
     processHabit("gym", gymStreak.dates);
+
+    habitCache.set("default", completions);
 
     return NextResponse.json({ 
       message: "Habits retrieved successfully", 
