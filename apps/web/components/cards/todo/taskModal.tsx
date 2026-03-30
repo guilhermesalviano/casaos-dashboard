@@ -1,5 +1,5 @@
 import { NewTaskForm, Priority, priorityColor, priorityLabel } from "@/types/task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const WEEK_DAYS = [
   { label: "Dom", value: 0 },
@@ -25,6 +25,15 @@ export default function TaskModal({ isOpen, onClose, onAdd }: TaskModalProps) {
     onAdd(form);
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return;
 
