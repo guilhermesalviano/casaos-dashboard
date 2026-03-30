@@ -1,6 +1,6 @@
-import WeatherCard from "@/components/cards/weather";
-import CalendarCard from "@/components/cards/calendar";
-import StocksCard from "@/components/cards/stocks";
+import WeatherCardClient from "./cards/clients/weatherCardClient";
+import CalendarCardClient from "./cards/clients/calendarCardClient";
+import StocksCardClient from "@/components/cards/clients/stocksCardClient";
 import TodoCard from "@/components/cards/todo";
 import StatusReporter from "./statusReporter";
 import MultiHabitTracker from "./cards/habitsTracker";
@@ -8,11 +8,11 @@ import MultiHabitTracker from "./cards/habitsTracker";
 const isWeekend = [0, 6].includes(new Date().getDay());
 
 const ALL_CARDS = [
-  WeatherCard,
+  WeatherCardClient,
   MultiHabitTracker,
-  !isWeekend && StocksCard,
+  !isWeekend && StocksCardClient,
   TodoCard,
-  CalendarCard,
+  CalendarCardClient,
 ].filter(Boolean) as React.ComponentType[];
 
 const autoSuccessStatuses = [

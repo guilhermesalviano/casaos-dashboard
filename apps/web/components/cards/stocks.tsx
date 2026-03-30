@@ -1,13 +1,6 @@
-"use client";
-
-import { useDashboard } from "@/hooks/useDashboard";
 import Card from "../card";
 
-export default function StocksCard() {
-  const { stocks } = useDashboard();
-
-  if (!stocks.data?.length) return null;
-
+export default function StocksCard({ data }: { data: any }) {
   return (
     <Card>
       <h2 className="section-title">📊 Ativos Hoje</h2>
@@ -24,7 +17,7 @@ export default function StocksCard() {
             Percent
           </span>
         </div>
-        {stocks.data.map((s: any) => (
+        {data.map((s: any) => (
           <div key={s.ticker} className="stock-row">
             <span className="stock-ticker">{s.ticker}</span>
             <span className="stock-price">

@@ -12,35 +12,13 @@
   {
     "httpRequest": {
       "path": "/v1/forecast",
-      "method": "GET",
-      "queryStringParameters": {
-        "latitude": [".*"],
-        "longitude": [".*"],
-        "current": [".*"],
-        "hourly": [".*"],
-        "start_hour": [".*"],
-        "end_hour": [".*"],
-        "timezone": [".*"]
-      }
+      "queryStringParameters": { "limit": ["6"] }
     },
     "httpResponse": {
       "statusCode": 200,
       "body": {
         "latitude": -23.5506507,
         "longitude": -46.6333824,
-        "generationtime_ms": 0.11444091796875,
-        "utc_offset_seconds": -10800,
-        "timezone": "America/Sao_Paulo",
-        "timezone_abbreviation": "GMT-3",
-        "elevation": 1056,
-        "current_units": {
-          "time": "iso8601",
-          "interval": "seconds",
-          "temperature_2m": "°C",
-          "relative_humidity_2m": "%",
-          "apparent_temperature": "°C",
-          "weather_code": "wmo code"
-        },
         "current": {
           "time": "2026-03-25T17:30",
           "interval": 900,
@@ -49,12 +27,40 @@
           "apparent_temperature": 26.4,
           "weather_code": 96
         },
-        "hourly_units": {
-          "time": "iso8601",
-          "temperature_2m": "°C",
-          "weather_code": "wmo code",
-          "precipitation_probability": "%",
-          "is_day": ""
+        "hourly": {
+          "time": [
+            "2026-03-25T17:00",
+            "2026-03-25T18:00",
+            "2026-03-25T19:00",
+            "2026-03-25T20:00",
+            "2026-03-25T21:00",
+            "2026-03-25T22:00"
+          ],
+          "temperature_2m": [23.5, 22.8, 21.4, 20.8, 20.4, 20.2],
+          "weather_code": [96, 96, 80, 80, 80, 80],
+          "precipitation_probability": [85, 80, 83, 63, 63, 45],
+          "is_day": [1, 1, 0, 0, 0, 0]
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "path": "/v1/forecast",
+      "queryStringParameters": { "limit": ["10"] }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "latitude": -23.5506507,
+        "longitude": -46.6333824,
+        "current": {
+          "time": "2026-03-25T17:30",
+          "interval": 900,
+          "temperature_2m": 23,
+          "relative_humidity_2m": 81,
+          "apparent_temperature": 26.4,
+          "weather_code": 96
         },
         "hourly": {
           "time": [
@@ -65,25 +71,14 @@
             "2026-03-25T21:00",
             "2026-03-25T22:00",
             "2026-03-25T23:00",
-            "2026-03-26T00:00"
+            "2026-03-26T00:00",
+            "2026-03-26T01:00",
+            "2026-03-26T02:00"
           ],
-          "temperature_2m": [
-            23.5, 22.8, 21.4,
-            20.8, 20.4, 20.2,
-            19.6, 19.2
-          ],
-          "weather_code": [
-            96, 96, 80, 80,
-            80, 80,  3,  3
-          ],
-          "precipitation_probability": [
-            85, 80, 83, 63,
-            63, 45, 33, 23
-          ],
-          "is_day": [
-            1, 1, 0, 0,
-            0, 0, 0, 0
-          ]
+          "temperature_2m": [23.5, 22.8, 21.4, 20.8, 20.4, 20.2, 19.6, 19.2, 18.9, 18.6],
+          "weather_code": [96, 96, 80, 80, 80, 80, 3, 3, 3, 2],
+          "precipitation_probability": [85, 80, 83, 63, 63, 45, 33, 23, 15, 10],
+          "is_day": [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
         }
       }
     }

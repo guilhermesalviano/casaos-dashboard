@@ -12,15 +12,19 @@ const weatherCache = createMemoryCache<WeatherInternalAPIResponse>(ONE_MINUTE_IN
 
 export async function GET(req: NextRequest) {
   try {
-    const cached = weatherCache.get();
-    if (cached) {
-      return NextResponse.json({ message: "Weather data from cache successfully", data: cached });
-    }
+    const limit = req.nextUrl.searchParams.get("limit");
+    const cacheKey = limit ?? "default";
+
+    // const cached = weatherCache.get(cacheKey);
+    // if (cached) {
+    //   return NextResponse.json({ message: "Weather data from cache successfully", data: cached });
+    // }
 
     const weather = await withRetry(() =>
       fetchOpenMeteoAPI({
         latitude: CONFIG.location.latitude,
         longitude: CONFIG.location.longitude,
+        limit: limit ? Number(limit) : 10,
       })
     );
 
@@ -52,7 +56,7 @@ export async function GET(req: NextRequest) {
       forecast: hours,
     };
 
-    weatherCache.set(weatherData);
+    weatherCache.set(cacheKey, weatherData);
 
     return NextResponse.json({ message: "Weather data retrieved successfully", data: weatherData }, { status: 200 })
   } catch (error: unknown) {

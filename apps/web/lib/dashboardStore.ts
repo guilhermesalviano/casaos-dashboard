@@ -42,7 +42,7 @@ async function fetchSlice(key: keyof DashboardStore, endpoint: string) {
 }
 
 const fetchers: Record<keyof DashboardStore, () => Promise<void>> = {
-  weather: () => fetchSlice("weather", "/api/weather"),
+  weather: () => fetchSlice("weather", "/api/weather?limit=6"),
   news:    () => fetchSlice("news",    "/api/news"),
   stocks:  () => fetchSlice("stocks",  "/api/stocks"),
 };

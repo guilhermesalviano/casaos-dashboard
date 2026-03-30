@@ -187,6 +187,7 @@ interface HourlyWeather {
 export interface OpenMeteoProps {
   latitude: string;
   longitude: string;
+  limit: number;
 }
 
 export interface WeatherResponse {
