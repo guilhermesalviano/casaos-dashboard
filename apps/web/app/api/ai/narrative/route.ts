@@ -62,7 +62,10 @@ export async function POST(req: NextRequest) {
 
         console.log("[prompt]", prompt);
 
-        const { data } = await GeminiProvider({ prompt, systemInstruction: ROCKY_INSTRUCTION, history: ROCKY_CHAT_HISTORY });
+        const { data, error } = await GeminiProvider({ prompt, systemInstruction: ROCKY_INSTRUCTION, history: ROCKY_CHAT_HISTORY });
+        if (error) {
+            return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        }
 
         narrativeCache.set("default", todoSummary + calendarSummary + habitsSummary + "|" + data)
 
