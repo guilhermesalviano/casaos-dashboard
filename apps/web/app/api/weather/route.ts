@@ -38,7 +38,8 @@ export async function GET(req: NextRequest) {
           weather.hourly.weather_code[index],
           weather.hourly.is_day[index] === 1
         ),
-      }));
+      }))
+      .slice(1, weather.hourly.time.length);
 
     const isDay = weather.hourly.is_day[0] === 1;
 
