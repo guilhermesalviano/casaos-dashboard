@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ 
       message: "Habits retrieved successfully", 
-      completions
+      data: completions
     });
 
   } catch (error) {
