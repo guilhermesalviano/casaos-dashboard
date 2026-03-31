@@ -5,13 +5,14 @@ import { createMemoryCache } from "@/utils/in-memory-cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ROCKY_CHAT_HISTORY } from "@/utils/chat-history";
 import getUserCity from "@/utils/get-user-city";
+import { format } from "date-fns";
 
 const narrativeCache = createMemoryCache<string>(ONE_MINUTE_IN_MS * 60 * 1);
 
 export async function POST(req: NextRequest) {
     try {
-        const today = new Date().toLocaleDateString("pt-BR", { timeZone: CONFIG.location.timezone, hour: '2-digit', minute: '2-digit', hour12: false });
-        const HABIT_PROMPT_HELPER = `- (wakedup=wake early; date different from ${today.split(",")[0]} = not done today)`;
+        const today = format(new Date(), "yyyy-MM-dd");
+        const HABIT_PROMPT_HELPER = `- (wakedup=wake up at 7am; date different from ${today} = not done today)`;
 
         const [todo, calendar, habits] = await Promise.all([
             fetch(`${CONFIG.baseUrl}/api/todo`).then(r => r.json()),
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
 
         const calendarSummary = calendar.data?.todayEvents.map((c: any) => c.title + " at " + c.start).join(", ");
 
-        const entries = Object.entries(habits.completions) as [string, any][];
+        const entries = Object.entries(habits.data) as [string, any][];
         const habitsSummary = entries.length > 0
             ? `${entries[0][0]}: ${entries[0][1].join(", ")} ${HABIT_PROMPT_HELPER}`
             : "No missions recorded.";
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
         //     /chuva|tempestade|rain|drizzle|shower|storm|trovoada/i.test(h.condition)).some((r: boolean) => r);
         const userLocation = await getUserCity();
 
-        const isMorning = hour > 5 && hour < 10;
+        const isMorning = hour >= 6 && hour <= 12;
         const prompt = [
             CONFIG.isDev && "[MOCK]",
             `[${today}|${userLocation.city},${userLocation.state}|weather:${weather.temp}°C,${weather.condition}]`,
