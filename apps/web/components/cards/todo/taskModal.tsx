@@ -1,3 +1,5 @@
+"use client";
+
 import { NewTaskForm, Priority, priorityColor, priorityLabel } from "@/types/task";
 import { useEffect, useState } from "react";
 
@@ -23,6 +25,7 @@ export default function TaskModal({ isOpen, onClose, onAdd }: TaskModalProps) {
   const handleSubmit = () => {
     if (!form.title.trim()) return;
     onAdd(form);
+    setForm({ title: "", priority: "medium", recurrence: {repeat: false, weeklyInterval: 1, weeklyDays: [0], weeklyEnd: null}});
     onClose();
   };
 

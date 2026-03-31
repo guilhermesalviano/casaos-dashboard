@@ -1,9 +1,9 @@
 import WeatherCardClient from "./cards/clients/weatherCardClient";
 import CalendarCardClient from "./cards/clients/calendarCardClient";
 import StocksCardClient from "@/components/cards/clients/stocksCardClient";
-import TodoCard from "@/components/cards/todo";
 import StatusReporter from "./statusReporter";
 import HabitsCardClient from "./cards/clients/habitsCardClient";
+import TodoCardClient from "./cards/clients/todoCardClient";
 
 const isWeekend = [0, 6].includes(new Date().getDay());
 
@@ -11,7 +11,7 @@ const ALL_CARDS = [
   WeatherCardClient,
   HabitsCardClient,
   !isWeekend && StocksCardClient,
-  TodoCard,
+  TodoCardClient,
   CalendarCardClient,
 ].filter(Boolean) as React.ComponentType[];
 
