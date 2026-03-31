@@ -8,12 +8,9 @@ interface GeminiProviderProps {
   history?: any[];
 }
 
-export default async function GeminiProvider({ prompt, systemInstruction, history }: GeminiProviderProps) {
+export default async function GeminiProvider({ prompt, systemInstruction, history }: GeminiProviderProps): Promise<{ data: string, error?: string }> {
   const apiKey = CONFIG.apis.geminiApiKey;
-  if (!apiKey) {
-    console.error("[error]", "GEMINI_API_KEY is not defined in environment.");
-    return { error: "Gemini API key not configured" };
-  }
+  if (!apiKey) return { data: "", error: "Gemini API key not configured" };
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -23,7 +20,6 @@ export default async function GeminiProvider({ prompt, systemInstruction, histor
       systemInstruction
     });
 
-    // temporarily hardcoded chat history
     const chat = model.startChat({
       history,
     });
@@ -33,7 +29,6 @@ export default async function GeminiProvider({ prompt, systemInstruction, histor
 
     return { data: response.text() };
   } catch (error) {
-    console.error("[error]", error);
-    return { error }
+    return { data: "", error: String(error) }
   }
 }

@@ -33,45 +33,48 @@ export async function POST(req: NextRequest) {
             ? `${entries[0][0]}: ${entries[0][1].join(", ")} ${HABIT_PROMPT_HELPER}`
             : "No missions recorded.";
 
-        const cached = narrativeCache.get("default");
-        if (cached && cached.split("|")[0] === todoSummary + calendarSummary + habitsSummary) {
+        const cacheKey = `${today}:${todoSummary.length}:${calendarSummary.length}:${habitsSummary.length}`;
+        console.log("[cacheKey]", cacheKey);
+
+        const cached = narrativeCache.get(cacheKey);
+        if (cached) {
             console.log("[cache] Using cached narrative");
-            return NextResponse.json({ message: "Narrative data from cache successfully", data: cached.split("|")[1] });
+            return NextResponse.json({ message: "Narrative data from cache successfully", data: cached });
         }
 
-        const todoCount = todo.data.filter((t: any) => t.checked === 0).length;
+        const body = await req.text();
+        if (!body) return NextResponse.json({ error: "Empty request body" }, { status: 400 });
 
-        const { weather, hour } = await req.json();
+        const { weather, hour } = JSON.parse(body);
 
-        const forecastSummary = weather.forecast.map((h: any) => `${h.time}:${h.condition},${h.temp}°C`).join("|");
-
-        const willBeRain = weather.forecast.map((h: any) =>
-            /chuva|tempestade|rain|drizzle|shower|storm|trovoada/i.test(h.condition)).some((r: boolean) => r);
-
+        const forecastSummary = weather.forecast
+            .map((h: any) => `${h.time}:${h.condition},${h.temp}°C`).join("|");
+        const willBeRain = weather.forecast
+            .map((h: any) => /chuva|tempestade|rain|drizzle|shower|storm|trovoada/i.test(h.condition))
+            .some((r: boolean) => r);
         const userLocation = await getUserCity();
-
+        const todoCount = todo.data.filter((t: any) => t.checked === 0).length;
         const isMorning = hour >= 6 && hour <= 12;
+
         const prompt = [
             CONFIG.isDev && "[MOCK]",
             `[${today}|${userLocation.city},${userLocation.state}|weather:${weather.temp}°C,${weather.condition}]`,
             `forecast[↑specific|${willBeRain ? "rain" : "no rain"}]:${forecastSummary}`,
             `calendar:${calendarSummary || "∅"}`,
-            `pending_tasks(${todoCount}⏰):${todoSummary || "∅"}`,
+            `reminders(${todoCount}⏰):${todoSummary || "∅"}`,
             isMorning && `habits[↑specific]:${habitsSummary}`,
         ].filter(Boolean).join(";");
 
         console.log("[prompt]", prompt);
 
         const { data, error } = await GeminiProvider({ prompt, systemInstruction: ROCKY_INSTRUCTION, history: ROCKY_CHAT_HISTORY });
-        if (error) {
-            return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-        }
+        if (error) return NextResponse.json({ error }, { status: 500 });
 
-        narrativeCache.set("default", todoSummary + calendarSummary + habitsSummary + "|" + data)
+        narrativeCache.set(cacheKey, data)
 
         return NextResponse.json({ message: "Narrative data retrieved successfully", data });
     } catch (error) {
-        console.error("Weather Narrative API error:", error);
+        console.error("AI Narrative API error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
