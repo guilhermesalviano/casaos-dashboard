@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fetchNominatimAPI } from "@/services/nominatim-api";
-import { CONFIG } from "@/config/config";
+import { LOCATION } from "@/config/config";
 
 const CONFIG_PATH = path.join(process.cwd(), ".location-cache");
 
@@ -34,8 +34,8 @@ export default async function getUserCity(): Promise<LocationCache> {
   };
 
   const res = await fetchNominatimAPI({
-    latitude: CONFIG.location.latitude,
-    longitude: CONFIG.location.longitude,
+    latitude: LOCATION.latitude,
+    longitude: LOCATION.longitude,
   });
 
   const location: LocationCache = {

@@ -1,4 +1,4 @@
-import { CONFIG } from "@/config/config";
+import { EXTERNAL_SERVICES, LOCATION } from "@/config/config";
 import { OpenMeteoProps, WeatherResponse } from "@/types/services";
 import { addHours, format } from "date-fns";
 
@@ -8,7 +8,7 @@ export async function fetchOpenMeteoAPI({latitude, longitude, limit = 10}: OpenM
   const start = format(now, "yyyy-MM-dd'T'HH:00");
   const end = format(addHours(now, limit), "yyyy-MM-dd'T'HH:00");
 
-  const response = await fetch(`${CONFIG.urls.openMeteo}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&hourly=temperature_2m,weather_code,precipitation_probability,is_day&start_hour=${start}&end_hour=${end}&timezone=${CONFIG.location.timezone}`, {
+  const response = await fetch(`${EXTERNAL_SERVICES.openMeteo}?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&hourly=temperature_2m,weather_code,precipitation_probability,is_day&start_hour=${start}&end_hour=${end}&timezone=${LOCATION.timezone}`, {
     next: { revalidate: 1 * 60 * 60 },
   });
 

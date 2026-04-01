@@ -6,7 +6,7 @@ import { withRetry } from "@/utils/retry";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { WeatherInternalAPIResponse } from "@/types/weather-api";
 import getUserCity from "@/utils/get-user-city";
-import { CONFIG } from "@/config/config";
+import { LOCATION } from "@/config/config";
 
 const weatherCache = createMemoryCache<WeatherInternalAPIResponse>(ONE_MINUTE_IN_MS * 60 * 1);
 
@@ -22,8 +22,8 @@ export async function GET(req: NextRequest) {
 
     const weather = await withRetry(() =>
       fetchOpenMeteoAPI({
-        latitude: CONFIG.location.latitude,
-        longitude: CONFIG.location.longitude,
+        latitude: LOCATION.latitude,
+        longitude: LOCATION.longitude,
         limit: limit ? Number(limit) : 10,
       })
     );

@@ -1,12 +1,12 @@
-import { CONFIG } from "@/config/config";
+import { EXTERNAL_SERVICES, UPDATE_INTERVAL_MS } from "@/config/config";
 import { LocationResponse, NominatimProps } from "@/types/services";
 
 export async function fetchNominatimAPI({latitude, longitude}: NominatimProps): Promise<LocationResponse> {
-  const response = await fetch(`${CONFIG.urls.nominatim}?format=jsonv2&lat=${latitude}&lon=${longitude}`, {
+  const response = await fetch(`${EXTERNAL_SERVICES.nominatim}?format=jsonv2&lat=${latitude}&lon=${longitude}`, {
     headers: {
       'User-Agent': 'CoreDash/1.0',
     },
-    next: { revalidate: CONFIG.updateIntervalMs },
+    next: { revalidate: UPDATE_INTERVAL_MS },
   });
 
   if (!response.ok) {

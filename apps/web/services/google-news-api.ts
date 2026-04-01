@@ -1,12 +1,12 @@
-import { CONFIG } from "@/config/config";
+import { APIS, EXTERNAL_SERVICES, UPDATE_INTERVAL_MS } from "@/config/config";
 import { SerpApiGoogleNewsResponse } from "@/types/services";
 
 export async function fetchGoogleNewsAPI(): Promise<SerpApiGoogleNewsResponse> {
-  const SERPAPI_KEY = CONFIG.apis.serpApiKey;
+  const SERPAPI_KEY = APIS.serpApiKey;
  
   const response = await fetch(
-    `${CONFIG.urls.serpApi}?engine=google_news_light&api_key=${SERPAPI_KEY}&q=breaking+news+world`,
-    { next: { revalidate: 1 * 60 * 60 } }
+    `${EXTERNAL_SERVICES.serpApi}?engine=google_news_light&api_key=${SERPAPI_KEY}&q=breaking+news+world`,
+    { next: { revalidate: UPDATE_INTERVAL_MS } }
   );
 
   if (!response.ok) {

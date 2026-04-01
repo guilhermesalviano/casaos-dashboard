@@ -1,6 +1,6 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { CONFIG } from "@/config/config";
+import { APIS } from "@/config/config";
 
 interface GeminiProviderProps {
   prompt: string;
@@ -9,7 +9,7 @@ interface GeminiProviderProps {
 }
 
 export default async function GeminiProvider({ prompt, systemInstruction, history }: GeminiProviderProps): Promise<{ data: string, error?: string }> {
-  const apiKey = CONFIG.apis.geminiApiKey;
+  const apiKey = APIS.geminiApiKey;
   if (!apiKey) return { data: "", error: "Gemini API key not configured" };
 
   try {

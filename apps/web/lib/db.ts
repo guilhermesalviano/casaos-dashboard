@@ -11,7 +11,7 @@ import { FlightCrawled } from "@/entities/FlightCrawled";
 import { WishlistAmazon } from "@/entities/WishlistAmazon";
 import { HabitTracker } from "@/entities/HabitTracker";
 import { Notification } from "@/entities/Notification";
-import { CONFIG } from "@/config/config";
+import { CONFIG, DB } from "@/config/config";
 
 let initializationPromise: Promise<DataSource> | null = null;
 
@@ -24,11 +24,11 @@ const devType: DataSourceOptions = {
 
 const prodType: DataSourceOptions = {
   type: "mariadb",
-  host: CONFIG.db.host,
-  port: CONFIG.db.port,
-  database: CONFIG.db.name,
-  username: CONFIG.db.username,
-  password: CONFIG.db.password,
+  host: DB.host,
+  port: DB.port,
+  database: DB.name,
+  username: DB.username,
+  password: DB.password,
   synchronize: false,
   logging: false,
 }

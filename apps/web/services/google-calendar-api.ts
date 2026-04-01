@@ -1,4 +1,4 @@
-import { CONFIG } from '@/config/config';
+import { GOOGLE } from '@/config/config';
 import { CalendarEventsResponse } from '@/types/services';
 import { addDays } from 'date-fns';
 import { google } from 'googleapis';
@@ -6,8 +6,8 @@ import { google } from 'googleapis';
 export async function fetchGoogleCalendarAPI(): Promise<CalendarEventsResponse> {
  const auth = new google.auth.GoogleAuth({
     credentials: {
-      client_email: CONFIG.google.clientEmail,
-      private_key: CONFIG.google.privateKey,
+      client_email: GOOGLE.clientEmail,
+      private_key: GOOGLE.privateKey,
     },
     scopes: ['https://www.googleapis.com/auth/calendar.readonly'],
   });
@@ -19,7 +19,7 @@ export async function fetchGoogleCalendarAPI(): Promise<CalendarEventsResponse> 
   const startOfDay = new Date(now.setHours(0, 0, 0, 0)).toISOString();
   const endOfDay = new Date(addDays(now, 7)).toISOString();
 
-  const calendarsIds = CONFIG.google.calendarIds;
+  const calendarsIds = GOOGLE.calendarIds;
 
   if (!calendarsIds) throw new Error("Env 'GOOGLE_CALENDAR_IDS' not defined.");
 
