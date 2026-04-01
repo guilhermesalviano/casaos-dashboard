@@ -55,6 +55,10 @@ export const APIS = {
   geminiApiKey: optional("GEMINI_API_KEY"),
 }
 
+export const AI = {
+  personalContext: optional("PERSONAL_CONTEXT"),
+}
+
 export const CONFIG = {
   isDev,
   baseUrl: required("BASE_URL"),

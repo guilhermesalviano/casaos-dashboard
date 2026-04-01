@@ -1,2 +1,0 @@
-// This isn't sensitive data, but I'm looking for a way to maintain it without breaking my pipeline.
-export const PERSONAL_CONTEXT = "Guilherme and Jade(girlfriend). They have two cats(Bonnie and Nina) and two dogs(Astrid and Alfredo).";

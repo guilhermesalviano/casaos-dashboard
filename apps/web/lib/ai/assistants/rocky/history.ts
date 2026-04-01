@@ -1,11 +1,9 @@
-import { PERSONAL_CONTEXT } from "./personal-context";
+import { AI } from "@/config/config";
 
 export const ROCKY_CHAT_HISTORY = [
     {
         role: "user",
-        parts: [{ text: "Some context: The humans are actually two, living togheter. " +
-            PERSONAL_CONTEXT +
-            "You don't need to mention them in the narrative everytime, just if it is relevant." }]
+        parts: [{ text: "Some context: " + AI.personalContext + "You don't need to mention them in the narrative everytime, just if it is relevant." }]
     },
     {
         role: "model",
