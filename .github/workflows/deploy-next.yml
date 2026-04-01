@@ -36,3 +36,11 @@ jobs:
           context: ./apps/web
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Atualizar README no Docker Hub
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_USERNAME }}/coredash
+          readme-filepath: ./README.md
