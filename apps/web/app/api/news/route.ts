@@ -1,6 +1,8 @@
 import { ONE_MINUTE_IN_MS } from "@/constants";
+import logger from "@/lib/logger";
 import { fetchGoogleNewsAPI } from "@/services/google-news-api";
 import { fetchMediastackAPI } from "@/services/mediastack-api";
+import { isErrorResponse } from "@/utils/check-service-error";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { parseRelativeDate } from "@/utils/parse-relative-date";
 import { differenceInHours } from "date-fns";
@@ -20,12 +22,13 @@ export async function GET(req: NextRequest) {
   try {
     const cached = newsCache.get("default");
     if (cached) {
+      logger.info("News data retrieved from cache successfully");
       return NextResponse.json({ message: "News data from cache successfully", data: cached });
     }
 
     const googleNewsData = await fetchGoogleNewsAPI();
 
-    if (googleNewsData) {
+    if (googleNewsData && !isErrorResponse(googleNewsData) && googleNewsData.news_results?.length) {
       const { news_results } = googleNewsData;
 
       const news = news_results

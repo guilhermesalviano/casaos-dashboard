@@ -24,6 +24,10 @@ export interface StockResult {
   logourl: string;
 }
 
+export interface ErrorResponse {
+  error: string;
+}
+
 export interface BrapiResponse {
   results: StockResult[];
   requestedAt: string;

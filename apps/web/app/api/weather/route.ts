@@ -7,6 +7,8 @@ import { createMemoryCache } from "@/utils/in-memory-cache";
 import { WeatherInternalAPIResponse } from "@/types/weather-api";
 import getUserCity from "@/utils/get-user-city";
 import { LOCATION } from "@/config/config";
+import { isErrorResponse } from "@/utils/check-service-error";
+import logger from "@/lib/logger";
 
 const weatherCache = createMemoryCache<WeatherInternalAPIResponse>(ONE_MINUTE_IN_MS * 60 * 1);
 
@@ -17,6 +19,7 @@ export async function GET(req: NextRequest) {
 
     const cached = weatherCache.get(cacheKey);
     if (cached) {
+      logger.info("Weather data retrieved from cache successfully");
       return NextResponse.json({ message: "Weather data from cache successfully", data: cached });
     }
 
@@ -27,6 +30,8 @@ export async function GET(req: NextRequest) {
         limit: limit ? Number(limit) : 10,
       })
     );
+
+    if (isErrorResponse(weather)) return NextResponse.json({ error: "Failed to retrieve weather data",  reason: weather.error }, { status: 503 });
 
     const hours = weather.hourly.time
       .map((t: string, index: number) => ({

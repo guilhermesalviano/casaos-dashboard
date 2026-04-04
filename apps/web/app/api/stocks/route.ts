@@ -1,8 +1,10 @@
 import { ONE_MINUTE_IN_MS } from "@/constants";
 import { STOCKS } from "@/constants/stocks";
+import logger from "@/lib/logger";
 import { fetchBrapiAPI } from "@/services/brapi-api";
 import { fetchYahooPrice } from "@/services/yahoo-finance";
 import { StockInternalAPIResponse } from "@/types/stock-api";
+import { isErrorResponse } from "@/utils/check-service-error";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -30,13 +32,14 @@ export async function GET(req: NextRequest) {
   try {
     const cached = stocksCache.get("default");
     if (cached) {
+      logger.info("Stocks data retrieved from cache successfully");
       return NextResponse.json({ message: "Stocks data from cache successfully", data: cached });
     }
 
     const symbols = Object.values(STOCKS).flat();
 
     const brapiData = await fetchBrapiAPI(symbols.join(","));
-    if (brapiData?.results?.length) {
+    if (!isErrorResponse(brapiData) && brapiData.results?.length) {
       const data = mapStocks(brapiData.results);
       stocksCache.set("default", data);
 

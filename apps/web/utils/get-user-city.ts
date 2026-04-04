@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import { fetchNominatimAPI } from "@/services/nominatim-api";
 import { LOCATION } from "@/config/config";
+import logger from "@/lib/logger";
+import { isErrorResponse } from "./check-service-error";
 
 const CONFIG_PATH = path.join(process.cwd(), ".location-cache");
 
@@ -22,14 +24,14 @@ function writeCache(data: LocationCache): void {
   try {
     fs.writeFileSync(CONFIG_PATH, JSON.stringify(data, null, 2), "utf-8");
   } catch {
-    console.warn("Could not write location cache:", CONFIG_PATH);
+    logger.warn("Could not write location cache:", CONFIG_PATH);
   }
 }
 
 export default async function getUserCity(): Promise<LocationCache> {
   const cached = readCache();
   if (cached) {
-    console.log("[cache]: return user location from cache.");
+    logger.info("return user location from cache.");
     return cached;
   };
 
@@ -37,6 +39,14 @@ export default async function getUserCity(): Promise<LocationCache> {
     latitude: LOCATION.latitude,
     longitude: LOCATION.longitude,
   });
+
+  if (isErrorResponse(res)) {
+    logger.error("Failed to fetch user location from Nominatim API:", res.error);
+    return {
+      state: "Unknown",
+      city: "Unknown",
+    };
+  }
 
   const location: LocationCache = {
     state:        res.address.state,

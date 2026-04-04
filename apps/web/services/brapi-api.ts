@@ -1,13 +1,23 @@
 import { APIS, EXTERNAL_SERVICES, UPDATE_INTERVAL_MS } from "@/config/config";
-import { BrapiResponse } from "@/types/services";
+import { fetchWithTimeout } from "@/lib/fetchWithTimeout";
+import logger from "@/lib/logger";
+import { BrapiResponse, ErrorResponse } from "@/types/services";
+import { toLogError } from "@/utils/to-logger-error";
 
-export async function fetchBrapiAPI(stocks: string): Promise<BrapiResponse> {
-  const API_KEY = APIS.brapiToken;
+export async function fetchBrapiAPI(stocks: string): Promise<BrapiResponse | ErrorResponse> {
+  const url = `${EXTERNAL_SERVICES.brapi}/${stocks}?token=${APIS.brapiToken}`;
 
-  const response = await fetch(`${EXTERNAL_SERVICES.brapi}/${stocks}?token=${API_KEY}`, {
-    next: { revalidate: UPDATE_INTERVAL_MS }
+  const response = await fetchWithTimeout(url, {
+    next: { revalidate: UPDATE_INTERVAL_MS },
   });
-  const responseJson = await response.json();
 
+  if (!response.ok) {
+    const bodyText = await response.text().catch(() => "");
+    const errorMessage = `BRAPI request failed with status ${response.status}`;
+    logger.error("Error fetching BRAPI API:", errorMessage, toLogError(bodyText));
+    return { error: errorMessage };
+  }
+
+  const responseJson = (await response.json()) as BrapiResponse;
   return responseJson;
 }

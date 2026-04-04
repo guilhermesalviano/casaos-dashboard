@@ -8,6 +8,11 @@ export async function fetchWithTimeout(
 
   try {
     return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`Request timed out after ${timeoutMs}ms`, { cause: error });
+    }
+    throw new Error("Fetch failed", { cause: error });
   } finally {
     clearTimeout(timer);
   }

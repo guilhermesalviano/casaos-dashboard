@@ -61,5 +61,6 @@ export const AI = {
 
 export const CONFIG = {
   isDev,
+  logLevel: optional("LOG_LEVEL", isDev ? "debug" : "info"),
   baseUrl: required("BASE_URL"),
 } as const;

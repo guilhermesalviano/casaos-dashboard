@@ -4,12 +4,14 @@ import { format, parseISO } from "date-fns";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { ONE_MINUTE_IN_MS } from "@/constants";
 import { CalendarInternalAPIResponse } from "@/types/calendar";
+import logger from "@/lib/logger";
 
 const calendarCache = createMemoryCache<CalendarInternalAPIResponse>(ONE_MINUTE_IN_MS * 60 * 3);
 
 export async function GET(req: NextRequest) {
   const cached = calendarCache.get("default");
   if (cached) {
+    logger.info("Calendar data retrieved from cache successfully");
     return NextResponse.json({ message: "Calendar data from cache successfully", data: cached });
   }
 

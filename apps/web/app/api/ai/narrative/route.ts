@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import GeminiProvider from "@/lib/ai/providers/gemini";
 import { ROCKY_INSTRUCTION } from "@/lib/ai/assistants/rocky/instruction";
 import { ROCKY_CHAT_HISTORY } from "@/lib/ai/assistants/rocky/history";
+import logger from "@/lib/logger";
 
 const narrativeCache = createMemoryCache<string>(ONE_MINUTE_IN_MS * 60 * 1);
 
@@ -34,11 +35,11 @@ export async function POST(req: NextRequest) {
             : "No missions recorded.";
 
         const cacheKey = `${today}:${todoSummary.length}:${calendarSummary.length}:${habitsSummary.length}`;
-        console.log("[cacheKey]", cacheKey);
+        logger.info("cacheKey:", cacheKey);
 
         const cached = narrativeCache.get(cacheKey);
         if (cached) {
-            console.log("[cache] Using cached narrative");
+            logger.info("Narrative data retrieved from cache successfully");
             return NextResponse.json({ message: "Narrative data from cache successfully", data: cached });
         }
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ message: "Narrative data retrieved successfully", data });
     } catch (error) {
-        console.error("AI Narrative API error:", error);
+        logger.error("AI Narrative API error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

@@ -9,6 +9,7 @@ import { TodoCheck } from "@/entities/TodoCheck";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import { TodoInternalAPIResponse } from "@/types/todo";
 import { ONE_MINUTE_IN_MS } from "@/constants";
+import logger from "@/lib/logger";
 
 const PRIORITYWEIGHT: Record<string, number> = {
   high: 1,
@@ -21,6 +22,7 @@ const todoCache = createMemoryCache<TodoInternalAPIResponse[]>(ONE_MINUTE_IN_MS 
 export async function GET(req: NextRequest) {
   const cached = todoCache.get("default");
   if (cached) {
+    logger.info("Todos data retrieved from cache successfully");
     return NextResponse.json({ message: "Todos data retrieved from cache", data: cached });
   }
 
