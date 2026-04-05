@@ -4,10 +4,10 @@ import { ONE_MINUTE_IN_MS } from "@/constants";
 import { createMemoryCache } from "@/utils/in-memory-cache";
 import getUserCity from "@/utils/get-user-city";
 import { format } from "date-fns";
-import GeminiProvider from "@/lib/ai/providers/gemini";
 import { ROCKY_INSTRUCTION } from "@/lib/ai/assistants/rocky/instruction";
 import { ROCKY_CHAT_HISTORY } from "@/lib/ai/assistants/rocky/history";
 import logger from "@/lib/logger";
+import OllamaProvider from "@/lib/ai/providers/ollama";
 
 const narrativeCache = createMemoryCache<string>(ONE_MINUTE_IN_MS * 60 * 1);
 
@@ -66,9 +66,8 @@ export async function POST(req: NextRequest) {
             isMorning && `habits[↑specific]:${habitsSummary}`,
         ].filter(Boolean).join(";");
 
-        console.log("[prompt]", prompt);
-
-        const { data, error } = await GeminiProvider({ prompt, systemInstruction: ROCKY_INSTRUCTION, history: ROCKY_CHAT_HISTORY });
+        logger.info(`[prompt] ${prompt}`);
+        const { data, error } = await OllamaProvider({ prompt, systemInstruction: ROCKY_INSTRUCTION, history: ROCKY_CHAT_HISTORY });
         if (error) return NextResponse.json({ error }, { status: 500 });
 
         narrativeCache.set(cacheKey, data)
