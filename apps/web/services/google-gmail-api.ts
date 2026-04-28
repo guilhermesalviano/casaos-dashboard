@@ -1,9 +1,24 @@
-import { GOOGLE } from '@/config/config';
+import { GOOGLE, LOCATION } from '@/config/config';
 import { GmailMessage } from '@/types/gmail';
 import { google } from 'googleapis';
 
 function getHeader(headers: { name: string; value: string }[], name: string): string {
   return headers.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value ?? '';
+}
+
+function normalizeDate(raw: string): string {
+  const date = new Date(raw);
+  if (isNaN(date.getTime())) return raw;
+  return new Intl.DateTimeFormat('sv-SE', {
+    timeZone: LOCATION.timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(date).replace(' ', 'T');
 }
 
 export async function fetchGoogleGmailAPI(): Promise<GmailMessage[]> {
@@ -40,9 +55,9 @@ export async function fetchGoogleGmailAPI(): Promise<GmailMessage[]> {
         id: detail.data.id!,
         threadId: detail.data.threadId!,
         snippet: detail.data.snippet ?? '',
-        from: getHeader(headers, 'From'),
+        from: getHeader(headers, 'From').replace("\u003C", '- ').replace("\u003E", '').trim(),
         subject: getHeader(headers, 'Subject'),
-        date: getHeader(headers, 'Date'),
+        date: normalizeDate(getHeader(headers, 'Date')),
         isUnread: labelIds.includes('UNREAD'),
       };
     }),
